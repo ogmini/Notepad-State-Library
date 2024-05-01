@@ -27,6 +27,8 @@ This library and its tools could be useful in forensic investigations or even in
 
 ### Library
 WIP
+### Pattern Files
+Binary Template for 010 Editor and Pattern File for ImHex have been submitted to their respective repositories and should be available for use. 
 ### Tabstate Parser
 WIP
 ### Windowstate Parser
@@ -120,18 +122,18 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 - [Configuration Block](#configuration-block)
 - CRC32 (4 bytes)
 
-##### Configuration Block
+###### Configuration Block
 - WordWrap (1 byte) 
 - RightToLeft (1 byte) 
 - ShowUnicode (1 byte) 
 - Version/MoreOptions (uLEB128)
 - [More Options Block](#more-options-block) (Variable length based on Version/MoreOptions)
 
-##### More Options Block
+###### More Options Block
 - SpellCheck (Not verified)
 - Autocorrect (Not verified)
 
-##### Unsaved Buffer Chunk
+###### Unsaved Buffer Chunk
 - Cursor Position (uLEB128)
 - Delection Action (uLEB128)
 - Addition Action (uLEB128)
