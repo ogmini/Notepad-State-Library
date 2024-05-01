@@ -21,17 +21,19 @@ This library and its tools could be useful in forensic investigations or even in
 > [!WARNING]
 > Prior to using the library or any of the tools, you should have an understanding of the tabstate and windowstate files. 
 >
-> Link to Information Section
+> [Information Section](#information)
+
+
 
 ### Library
-
+WIP
 ### Tabstate Parser
-
+WIP
 ### Windowstate Parser
-
+WIP
 ## Information
 
-### Tabstate
+### Tabstate 
 
 > [!NOTE]
 > Location of Files
@@ -55,7 +57,7 @@ Opening Windows Notepad with no currently existing tab(s) will create an empty "
 
 Creating new tab(s) will create associated No File Tab bin file(s).
 
-Opening file(s0 from disk will create associated File Tab bin file(s).
+Opening file(s) from disk will create associated File Tab bin file(s).
 
 Closing tab(s) will delete the associated bin file(s). 
 
@@ -83,49 +85,51 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 - CarriageReturnType (1 byte) 
 - Timestamp (uLEB128)
 - FileHash (32 bytes)
-- Unknown [0x00, 0x01]
+- :question:Unknown [0x00, 0x01]
 - SelectionStartIndex (uLEB128)
 - SelectionEndIndex (uLEB128)
-- WordWrap (1 byte) 
-- RightToLeft (1 byte) 
-- ShowUnicode (1 byte) 
-- Unknown [0x00]
+- [Configuration Block](#configuration-block)
 - ContentLength (uLEB128)
 - Content (Variable)
 - Unsaved (1 byte) 
 - CRC32 (4 bytes)
-- Unsaved Buffer Chunks
+- [Unsaved Buffer Chunks](#unsaved-buffer-chunk)
 
 ##### No File Tab
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
 - TypeFlag (uLEB128)
-- Unknown [0x01]
-- ContentLength (uLEB128)
-- ContentLength (uLEB128)
-- WordWrap (1 byte) 
-- RightToLeft (1 byte) 
-- ShowUnicode (1 byte) 
-- Unknown [0x00]
+- :question:Unknown [0x01]
+- SelectionStartIndex (uLEB128) - Never differs from ContentLength
+- SelectionEndIndex (uLEB128) - Never differs from ContentLength
+- [Configuration Block](#configuration-block)
 - ContentLength (uLEB128)
 - Content (Variable)
 - Unsaved (1 byte)
 - CRC32 (4 bytes)
-- Unsaved Buffer Chunks
+- [Unsaved Buffer Chunks](#unsaved-buffer-chunk)
 
 ##### State File
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
 - TypeFlag (uLEB128)
-- Unknown [0x00]
+- :question:Unknown [0x00]
 - BinSize (uLEB128)
 - SelectionStartIndex (uLEB128)
 - SelectionEndIndex (uLEB128)
+- [Configuration Block](#configuration-block)
+- CRC32 (4 bytes)
+
+##### Configuration Block
 - WordWrap (1 byte) 
 - RightToLeft (1 byte) 
 - ShowUnicode (1 byte) 
-- Unknown [0x00]
-- CRC32 (4 bytes)
+- Version/MoreOptions (uLEB128)
+- [More Options Block](#more-options-block) (Variable length based on Version/MoreOptions)
+
+##### More Options Block
+- SpellCheck (Not verified)
+- Autocorrect (Not verified)
 
 ##### Unsaved Buffer Chunk
 - Cursor Position (uLEB128)
@@ -134,7 +138,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 - Added Characters (UTF-16LE)
 - CRC32 (4 bytes)
 
-### Windowstate
+### Windowstate 
 
 > [!NOTE]
 > Location of Files
@@ -164,7 +168,7 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
 - BytesToCRC (uLEB128)
-- Unknown [0x00]
+- :question:Unknown [0x00]
 - NumberTabs (uLEB128)
 - Tab GUID Chunks
 	- GUID for each Tab in view order (16 bytes) 
@@ -179,7 +183,7 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 - WindowSize 
 	- Width (uINT32)
 	- Height (uINT32)
-- Unknown [0x00]
+- :question:Unknown [0x00]
 - CRC32 (4 bytes)
 - Slack Space (Variable)
 
