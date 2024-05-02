@@ -1,6 +1,6 @@
 # Notepad State Library
 
-Microsoft Windows 11's version of Notepad supports multiple tabs and many other features. This repository serves to record and document my research and efforts in reverse engineering the format of the tabstate and windowstate files. The result of which is a C# library that provides the ability to parse and manipulate the tabstate and windowstate files. Additionally, the following are planned/completed:
+Microsoft Windows 11's version of [Windows Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3) supports multiple tabs and many other features. This repository serves to record and document my research and efforts in reverse engineering the format of the tabstate and windowstate files and understanding their behavior. The result of which is a C# library that provides the ability to parse and manipulate the tabstate and windowstate files. Additionally, the following are planned/completed:
 - [x] Tabstate Parser
 - [x] Windowstate Parser
 - [x] 010 Editor Binary Template File for Windowstate file
@@ -13,9 +13,9 @@ This library and its tools could be useful in forensic investigations or even in
 
 ## Acknowledgements
 
-[jlogsdon](https://github.com/jlogsdon)  
-[NordGaren](https://github.com/Nordgaren)      
-[JustArion](https://github.com/JustArion) 
+[jlogsdon](https://github.com/jlogsdon) for lots of help.  
+[NordGaren](https://github.com/Nordgaren) for lots of help, his [tabstate-util](https://github.com/Nordgaren/tabstate-util/), and 010 Editor Binary Template file which helped me learn the syntax and the struct/functions for uLEB128.   
+[JustArion](https://github.com/JustArion) for lots of help and his [ImHex Pattern File](https://github.com/JustArion/Notepad-Tabs/blob/main/ImHex-Patterns/NotepadTab.hexpat) which helped me learn the syntax.
 
 ## Usage
 > [!WARNING]
@@ -26,13 +26,14 @@ This library and its tools could be useful in forensic investigations or even in
 
 
 ### Library
-WIP
+Documentation WIP
 ### Pattern Files
 Binary Template for 010 Editor and Pattern File for ImHex have been submitted to their respective repositories and should be available for use. 
 ### Tabstate Parser
-WIP
+Documentation WIP
 ### Windowstate Parser
-WIP
+Documentation WIP
+
 ## Information
 
 ### Tabstate 
@@ -41,7 +42,7 @@ WIP
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState`
 
-The Tabstate files store information about the open tabs and their content in Windows Notepad. The filenames are GUIDs and there are three types of *.bin files:
+The tabstate files store information about the open tabs and their contents in Windows Notepad. The filenames are GUIDs and there are three types of *.bin files:
 - File Tab
 	- These tabs have been saved to disk or have been opened from a file on disk 
 - No File Tab
@@ -51,7 +52,7 @@ The Tabstate files store information about the open tabs and their content in Wi
 
 Both the File and No File Tab can have related State Files. 
 
-When Windows Notepad is open the File and No File Tab can have Unsaved Buffer Chunks of changes that haven't been saved or consolidated. The Unsaved Buffer Chunks can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed, the Unsaved Buffer Chunks are consolidated into the Content. 
+While Windows Notepad is open the File and No File Tab can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been saved or consolidated. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are consolidated into the content. 
 
 #### Behavior
 
@@ -63,16 +64,14 @@ Opening file(s) from disk will create associated File Tab bin file(s).
 
 Closing tab(s) will delete the associated bin file(s). 
 
-TODO: Reasons state files are created/deleted.
+TODO: Reasons State Files are created/deleted.
 
 The existence of no bin file(s) indicates:
 - Windows Notepad has never been opened
 - All tabs have been manually closed
 - Manual deletion
 
-If you drag/drop multiple files into Windows Notepad, the internal content of the bin file(s) will not load until the tab becomes active.
-
-
+If you drag/drop multiple files into Windows Notepad, the internal content of the bin file(s) will not load until the tab becomes active. (To be expaned upon)
 
 #### File Format
 
@@ -146,7 +145,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState`
 
-The Windowstate files store information about the list of tabs, order of tabs, and active tab for Windows Notepad. Tabs are stored as GUIDs which refer back to the filename of the matching tabstate file. They also store the coordinates and size of the Notepad window. Integrity of the file is validated with CRC32. 
+The windowstate files store information about the list of tabs, order of tabs, and active tab for Windows Notepad. Tabs are stored as GUIDs which refer back to the filename of the matching tabstate file. They also store the coordinates and size of the Windows Notepad window. Integrity of the file is validated with CRC32. 
 
 #### Behavior
 
@@ -162,7 +161,7 @@ The following actions will cause an update of the sequence number and file:
 	- Closing multiple tabs at once results in one action
 - Opening tab(s)
 
-Creating a new Notepad window by dragging a tab outside of the original window will spawn new window state files. As you close each extra window, it will prompt you to save any files in that window and the corresponding window state file pair will be deleted. When the last window of Notepad is closed, the final window state file pair will not be deleted. 
+Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new window state files. As you close each extra window, it will prompt you to save any files in that window and the corresponding window state file pair will be deleted. When the last window of Windows Notepad is closed, the final window state file pair will not be deleted. 
 
 Updates alternate between the *.0.bin and *.1.bin with the most up to date file having the greatest sequence number.
 
@@ -195,4 +194,8 @@ It appears that the windowstate files will never reduce in size. More testing is
 There is a potential to recover complete or partial GUIDs from the slack space that can be tied back to past tabstate files. These deleted tabstate files could possibly be recovered and examined.  
 
 > [!WARNING]  
-> The below approaches make heavy assumptions. As Tabs are opened and closed, the slack space will get more and more convoluted and disarrayed. Manual parsing is suggested and there is no guarantee of being able to recover anything of use. 
+> The approaches make heavy assumptions. As Tabs are opened and closed, the slack space will get more and more convoluted and disarrayed. Manual parsing is suggested and there is no guarantee of being able to recover anything of use. 
+
+##### Approaches
+
+WIP
