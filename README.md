@@ -1,12 +1,19 @@
 # Notepad State Library
 
-Microsoft Windows 11's version of [Windows Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3) supports multiple tabs and many other features. This repository serves to record and document my research and efforts in reverse engineering the format of the tabstate and windowstate files and understanding their behavior. The result of which is a C# library that provides the ability to parse and manipulate the tabstate and windowstate files. Additionally, the following are planned/completed:
+Microsoft Windows 11's version of [Windows Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3) supports multiple tabs and many other features. This repository serves to record and document my research and efforts in reverse engineering the format of the tabstate and windowstate files and understand their behavior. The result of which is a C# library that provides the ability to parse and manipulate the tabstate, windowstate, and settings files. 
+
+- [Tabstate](#tabstate)
+- [Windowstate](#windowstate)
+- [Settings](#settings)
+
+The following are planned/completed:
 - [x] Tabstate Parser
 - [x] Windowstate Parser
 - [x] 010 Editor Binary Template File for Windowstate file
 - [x] ImHex Pattern File for Windowstate file 
 - [ ] Tabstate Manipulator
 - [ ] Windowstate Manipulator
+- [ ] Settings.dat / Application Registry
 - [ ] POC Malware
 
 This library and its tools could be useful in forensic investigations or even in the toolbox for a red/purple team.
@@ -19,11 +26,9 @@ This library and its tools could be useful in forensic investigations or even in
 
 ## Usage
 > [!WARNING]
-> Prior to using the library or any of the tools, you should have an understanding of the tabstate and windowstate files. 
+> Prior to using the library or any of the tools, you should have an understanding of the tabstate, windowstate, and settings files. 
 >
 > [Information Section](#information)
-
-
 
 ### Library
 Documentation WIP
@@ -36,11 +41,24 @@ Documentation WIP
 
 ## Information
 
+The information below has been tested/validated on the following configurations:
+
+| Windows Build | Windows Notepad Version 
+|---|---|
+| Windows 11 23H2 OS Build 22635.3566 (Beta Release Branch) | 11.2402.22.0
+| Windows 11 23H2 OS Build 22631.3527 (Stable Release Branch) | 11.2402.22.0
+
+- [Tabstate](#tabstate)
+- [Windowstate](#windowstate)
+- [Settings](#settings)
+
 ### Tabstate 
 
 > [!NOTE]
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState`
+> Relevant Files
+> `*.bin` `*.0.bin` `*.1.bin`
 
 The tabstate files store information about the open tabs and their contents in Windows Notepad. The filenames are GUIDs and there are three types of *.bin files:
 - File Tab
@@ -126,11 +144,11 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 - RightToLeft (1 byte) 
 - ShowUnicode (1 byte) 
 - Version/MoreOptions (uLEB128)
-- [More Options Block](#more-options-block) (Variable length based on Version/MoreOptions)
+- [More Options Block](#more-options-block) (Maybe variable length based on Version/MoreOptions)
 
 ###### More Options Block
-- SpellCheck (Not verified)
-- Autocorrect (Not verified)
+- :question:Unknown (1 byte) (Spellcheck/Autocorrect? Do not seem to be flags...)
+- :question:Unknown (1 byte) (Spellcheck/Autocorrect? Do not seem to be flags...)
 
 ###### Unsaved Buffer Chunk
 - Cursor Position (uLEB128)
@@ -144,6 +162,8 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 > [!NOTE]
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState`
+> Relevant Files
+> `*.0.bin` `*.1.bin`
 
 The windowstate files store information about the list of tabs, order of tabs, and active tab for Windows Notepad. Tabs are stored as GUIDs which refer back to the filename of the matching tabstate file. They also store the coordinates and size of the Windows Notepad window. Integrity of the file is validated with CRC32. 
 
@@ -199,3 +219,59 @@ There is a potential to recover complete or partial GUIDs from the slack space t
 ##### Approaches
 
 WIP
+
+### Settings
+> [!NOTE]
+> Location of Files
+> `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\Settings`
+> Relevant Files
+> `settings.dat`
+
+The settings files store application wide settings and defaults. The file is an application hive which can be opened with RegEdit and other tools which can handle registry files. 
+
+Settings.dat / Application Hive
+
+[Application Hives](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/filtering-registry-operations-on-application-hives)
+[Windows Store App Settings](https://lunarfrog.com/blog/inspect-app-settings)
+[Manipulating Windows Store App Settings](https://www.damirscorner.com/blog/posts/20150117-ManipulatingSettingsDatFileWithSettingsFromWindowsStoreApps.html)
+[UWP App Data Storage](https://helgeklein.com/blog/uwp-universal-windows-app-data-storage-admins/)
+
+For now, opening this file with RegEdit makes it readable. There is a Binary Template file for 010 Editor but it doesn't appear to be fully correct for an Application Hive. A potential area for research.
+
+#### Behavior
+
+#### File Format
+
+Last 8 bytes of each key are the filetime. INT64 to FileTime. This appears in the value of the key.
+
+- AutoCorrect - Autocorrect 0/1
+- FontFamily
+- FontStyle
+- GhostFile - When Notepad starts (0 Open in a new window / 1 Open content from the previous session)
+- LocalizedFontFamily
+- LocalizedFontStyle
+- OpenFile (00 is new tab / 01 is new window)
+- SpellCheckState - JSON Array to store settings. {"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}
+- StatusBarShown - 0/1
+- TeachingTipCheckCount
+- TeachingTipExplicitClose
+- TeachingTipVersion
+- Theme (Not always set) (NULL is System / 00 is System / 01 is Light / 02 is Dark)
+- WindowPositionBottom
+- WindowPositionHeight
+- WindowPositionLeft
+- WindowPositionRight
+- WindowPositionTop
+- WindowPosotionWidth
+- WordWrap - Default 0/1
+
+4 bytes reversed
+
+0x5f5e10b (0B E1 F5 05) - bool?
+0x5f5e10c - string?
+0x5f5e104 - 4 bytes? number?
+0x5f5e105 - 4 bytes? number?
+
+WordWrap
+0B E1 F5 05 | 01 00 00 00 | 57 6F 72 64 57 72 61 70 | F0 FF FF FF | 01 | CC 92 05 44 C8 9F DA 01
+Type | Delimiter? | Key | Delimiter? | Value | Timestamp
