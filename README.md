@@ -242,40 +242,46 @@ Settings.dat / Application Hive
 [REGF Format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
 [Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
-For now, opening this file with RegEdit makes it readable. There is a Binary Template file for 010 Editor but it doesn't appear to be fully correct for an Application Hive. A potential area for research.
+For now, opening this file with RegEdit makes it readable. There is a Binary Template file for 010 Editor that I've updated.
 
 #### Behavior
 
+If a key doesn't exist that option hasn't been changed from the default. 
+
 #### File Format
 
-Last 8 bytes of each key are the filetime. INT64 to FileTime. This appears in the value of the key.
+Last 8 bytes of each key are the FileTime. This appears in the value of the key.
 
-- AutoCorrect - Autocorrect 0/1
-- FontFamily
-- FontStyle
-- GhostFile - When Notepad starts (0 Open in a new window / 1 Open content from the previous session)
-- LocalizedFontFamily
-- LocalizedFontStyle
-- OpenFile (00 is new tab / 01 is new window)
-- SpellCheckState - JSON Array to store settings. {"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}
-- StatusBarShown - 0/1
-- TeachingTipCheckCount
-- TeachingTipExplicitClose
-- TeachingTipVersion
-- Theme (Not always set) (NULL is System / 00 is System / 01 is Light / 02 is Dark)
-- WindowPositionBottom
-- WindowPositionHeight
-- WindowPositionLeft
-- WindowPositionRight
-- WindowPositionTop
-- WindowPosotionWidth
-- WordWrap - Default 0/1
-
-4 bytes reversed
-
-0x5f5e10b (0B E1 F5 05) - bool?
-0x5f5e10c - string?
-0x5f5e104 - 4 bytes? number?
-0x5f5e105 - 4 bytes? number?
+| Type | Hex | Description |
+|---|---|---|
+|0x5f5e104|`04 E1 F5 05` | uINT32
+|0x5f5e105|`05 E1 F5 05` | uINT32
+|0x5f5e10b|`0B E1 F5 05` | byte (bool)
+|0x5f5e10c|`0C E1 F5 05` | string (NULL Terminated)
 
 
+SCREENSHOT HERE
+
+
+| KeyName | Type | Notes |
+|---|---|---|
+|AutoCorrect|0x5f5e10b| `00` Off / `01` On
+|FontFamily|0x5f5e10c| String
+|FontStyle|0x5f5e10c| String
+|GhostFile|0x5f5e10b| `00` Open in a new window / `01` Open content from a previous session
+|LocalizedFontFamily|0x5f5e10c| String
+|LocalizedFontStyle|0x5f5e10c| String
+|OpenFile|0x5f5e104| `00` New Tab / `01` New Window
+|SpellCheckState|0x5f5e10c| JSON: `{"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}`
+|StatusBarShown|0x5f5e10b| `00` Off / `01` On
+|TeachingTipCheckCount|0x5f5e105| Unknown
+|TeachingTipExplicitClose|0x5f5e10b| Unknown
+|TeachingTipVersion|0x5f5e105| Unknown
+|Theme|0x5f5e104| `00` System / `01` Light / `02` Dark
+|WindowPositionBottom|0x5f5e104|
+|WindowPositionHeight|0x5f5e104|
+|WindowPositionLeft|0x5f5e104|
+|WindowPositionRight|0x5f5e104|
+|WindowPositionTop|0x5f5e104|
+|WindowPositionWidth|0x5f5e104|
+|WordWrap|0x5f5e10b| `00` Off / `01` On
