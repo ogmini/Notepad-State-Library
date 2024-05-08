@@ -57,6 +57,7 @@ The information below has been tested/validated on the following configurations:
 > [!NOTE]
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState`
+>
 > Relevant Files
 > `*.bin` `*.0.bin` `*.1.bin`
 
@@ -162,6 +163,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 > [!NOTE]
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState`
+>
 > Relevant Files
 > `*.0.bin` `*.1.bin`
 
@@ -224,6 +226,7 @@ WIP
 > [!NOTE]
 > Location of Files
 > `%localappdata%\Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\Settings`
+>
 > Relevant Files
 > `settings.dat`
 
@@ -235,6 +238,9 @@ Settings.dat / Application Hive
 [Windows Store App Settings](https://lunarfrog.com/blog/inspect-app-settings)
 [Manipulating Windows Store App Settings](https://www.damirscorner.com/blog/posts/20150117-ManipulatingSettingsDatFileWithSettingsFromWindowsStoreApps.html)
 [UWP App Data Storage](https://helgeklein.com/blog/uwp-universal-windows-app-data-storage-admins/)
+
+[REGF Format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
+[Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
 For now, opening this file with RegEdit makes it readable. There is a Binary Template file for 010 Editor but it doesn't appear to be fully correct for an Application Hive. A potential area for research.
 
@@ -272,6 +278,4 @@ Last 8 bytes of each key are the filetime. INT64 to FileTime. This appears in th
 0x5f5e104 - 4 bytes? number?
 0x5f5e105 - 4 bytes? number?
 
-WordWrap
-0B E1 F5 05 | 01 00 00 00 | 57 6F 72 64 57 72 61 70 | F0 FF FF FF | 01 | CC 92 05 44 C8 9F DA 01
-Type | Delimiter? | Key | Delimiter? | Value | Timestamp
+
