@@ -27,7 +27,7 @@ namespace NotepadStateLibrary
         /// <summary>
         /// Length of the content
         /// </summary>
-        public List<ulong> ContentLength { get; private set; }
+        public ulong ContentLength { get; private set; }
         /// <summary>
         /// Calculated CRC32
         /// </summary>
@@ -59,6 +59,14 @@ namespace NotepadStateLibrary
         /// <summary>
         /// 
         /// </summary>
+        public ulong OptionCount { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte[] Options { get; private set; } = null!;
+        /// <summary>
+        /// Right To Left Text Toggle
+        /// </summary>
         public byte[] RightToLeft { get; private set; } = null!;
         /// <summary>
         /// Size of text file saved on disk
@@ -77,7 +85,7 @@ namespace NotepadStateLibrary
         /// </summary>
         public ulong SequenceNumber { get; private set; }
         /// <summary>
-        /// 
+        /// Show Unicode Toggle
         /// </summary>
         public byte[] ShowUnicode { get; private set; } = null!;
         /// <summary>
@@ -91,7 +99,7 @@ namespace NotepadStateLibrary
         /// </summary>
         public ulong TypeFlag { get; private set; }
         /// <summary>
-        ///
+        /// Unsaved Toggle
         /// </summary>
         public byte[] Unsaved { get; private set; } = null!;
         /// <summary>
@@ -99,7 +107,7 @@ namespace NotepadStateLibrary
         /// </summary>
         public List<UnsavedBufferChunk> UnsavedBufferChunks { get; private set; }
         /// <summary>
-        /// 
+        /// WordWrap Toggle
         /// </summary>
         public byte[] WordWrap { get; private set; } = null!;
 
@@ -111,7 +119,6 @@ namespace NotepadStateLibrary
         {
             this.bytes = bytes;
 
-            ContentLength = new List<ulong>();
             UnsavedBufferChunks = new List<UnsavedBufferChunk>();
 
             ParseBytes();
@@ -128,11 +135,12 @@ namespace NotepadStateLibrary
         public NPTabState(byte[] content, byte[] rightToLeft, byte[] showUnicode, List<UnsavedBufferChunk> unsavedBufferChunks, byte[] wordWrap)
         {
             bytes = [];
-            ContentLength = new List<ulong>();
             UnsavedBufferChunks = new List<UnsavedBufferChunk>();
 
             Content = content;
-            ContentLength.Add((ulong)content.Length / 2); //TODO: Verify
+            ContentLength = (ulong)content.Length / 2;
+            SelectionStartIndex = ContentLength;
+            SelectionEndIndex = ContentLength;
             RightToLeft = rightToLeft;
             SequenceNumber = 0;
             ShowUnicode = showUnicode;
@@ -166,7 +174,6 @@ namespace NotepadStateLibrary
             byte[] rightToLeft, byte[] showUnicode, byte[] content)
         {
             bytes = [];
-            ContentLength = new List<ulong>();
             UnsavedBufferChunks = new List<UnsavedBufferChunk>();
 
             TypeFlag = 1;
@@ -184,7 +191,7 @@ namespace NotepadStateLibrary
             WordWrap = wordWrap;
             RightToLeft = rightToLeft;
             ShowUnicode = showUnicode;
-            ContentLength.Add((ulong)content.Length / 2); //TODO: Verify
+            ContentLength = (ulong)content.Length / 2; 
             Content = content;
 
             Save();
@@ -204,7 +211,6 @@ namespace NotepadStateLibrary
             byte[] rightToLeft, byte[] showUnicode)
         {
             bytes = [];
-            ContentLength = new List<ulong>();
             UnsavedBufferChunks = new List<UnsavedBufferChunk>();
 
             SequenceNumber = sequenceNumber;
@@ -227,179 +233,13 @@ namespace NotepadStateLibrary
         /// <returns>Bytes to be written to file</returns>
         public byte[] WriteContent(byte[] newContent)
         {
-            ContentLength.Clear();
-            ContentLength.Add((ulong)newContent.Length / 2);
-            ContentLength.Add((ulong)newContent.Length / 2);
-            ContentLength.Add((ulong)newContent.Length / 2);
+            ContentLength = ((ulong)newContent.Length / 2);
             Content = newContent;
             Unsaved = [0x01];
 
             Save();
 
             return bytes;
-
-            #region deprecated
-            //using (MemoryStream stream = new MemoryStream(bytes))
-            //{
-            //    using (MemoryStream outStream = new MemoryStream())
-            //    {
-            //        using (BinaryReader reader = new BinaryReader(stream))
-            //        {
-            //            using (BinaryWriter writer = new BinaryWriter(outStream))
-            //            {
-            //                var hdr = reader.ReadBytes(2);
-            //                writer.Write(hdr);
-
-            //                writer.Write(reader.ReadLEB128Unsigned().WriteLEB128Unsigned());
-            //                var typeFlag = reader.ReadLEB128Unsigned();
-            //                writer.Write(typeFlag.WriteLEB128Unsigned());
-
-            //                switch (typeFlag)
-            //                {
-            //                    case 0: //Unsaved - buffer file
-            //                        {
-            //                            CRC32Check c = new CRC32Check();
-            //                            c.AddBytes(typeFlag);
-
-            //                            var delim1 = reader.ReadBytes(1);
-            //                            writer.Write(delim1);
-            //                            c.AddBytes(delim1);
-
-            //                            var OriginalContentLength = ContentLength.Last();
-            //                            ContentLength.Clear();
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(((ulong)newContent.Length / 2).WriteLEB128Unsigned());
-            //                            ContentLength.Add((ulong)newContent.Length / 2);
-            //                            c.AddBytes(ContentLength.Last());
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(((ulong)newContent.Length / 2).WriteLEB128Unsigned());
-            //                            ContentLength.Add((ulong)newContent.Length / 2);
-            //                            c.AddBytes(ContentLength.Last());
-
-            //                            var other = reader.ReadBytes(4); //Unknown maybe delimiter??? Appears to be WordWrap , Right to Left, Show Unicode, Unknown
-            //                            writer.Write(other);
-            //                            c.AddBytes(other);
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(((ulong)newContent.Length / 2).WriteLEB128Unsigned());
-            //                            ContentLength.Add((ulong)newContent.Length / 2);
-            //                            c.AddBytes(ContentLength.Last());
-
-            //                            reader.ReadBytes((int)OriginalContentLength * 2);
-            //                            writer.Write(newContent);
-            //                            Content = newContent;
-            //                            c.AddBytes(Content);
-
-            //                            var saved = reader.ReadBytes(1);
-            //                            writer.Write(saved);
-            //                            c.AddBytes(saved);
-
-            //                            reader.ReadBytes(4);
-            //                            CRC32Stored = c.CRC32;
-            //                            writer.Write(CRC32Stored);
-            //                            CRC32Calculated = c.CRC32;
-
-            //                            //TODO: Delete or Update State Files? (0.bin and 1.bin)
-            //                        }
-            //                        break;
-            //                    case 1: //Saved - buffer file
-            //                        {
-            //                            CRC32Check c = new CRC32Check();
-            //                            c.AddBytes(typeFlag);
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(FilePathLength.WriteLEB128Unsigned());
-            //                            c.AddBytes(FilePathLength);
-
-            //                            var fPathBytes = reader.ReadBytes((int)FilePathLength * 2);
-            //                            writer.Write(fPathBytes);
-            //                            c.AddBytes(fPathBytes);
-
-            //                            reader.ReadLEB128Unsigned(); 
-            //                            writer.Write(SavedFileContentLength.WriteLEB128Unsigned());
-            //                            c.AddBytes(SavedFileContentLength);
-
-            //                            reader.ReadBytes(1);
-            //                            writer.Write(EncodingType);
-            //                            c.AddBytes(EncodingType);
-
-            //                            reader.ReadBytes(1);
-            //                            writer.Write(CarriageReturnType);
-            //                            c.AddBytes(CarriageReturnType);
-
-            //                            var timeStamp = reader.ReadLEB128Unsigned();
-            //                            writer.Write(timeStamp.WriteLEB128Unsigned());
-            //                            c.AddBytes(timeStamp);
-
-            //                            reader.ReadBytes(32);
-            //                            writer.Write(FileHashStored);
-            //                            c.AddBytes(FileHashStored);
-
-            //                            var delim1 = reader.ReadBytes(2); //Unknown maybe delimiter??? Appears to be 00 01 
-            //                            writer.Write(delim1);
-            //                            c.AddBytes(delim1);
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(SelectionStartIndex.WriteLEB128Unsigned());
-            //                            c.AddBytes(SelectionStartIndex);
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(SelectionEndIndex.WriteLEB128Unsigned());
-            //                            c.AddBytes(SelectionEndIndex);
-
-
-            //                            var delim2 = reader.ReadBytes(4); //Unknown maybe delimiter??? Appears to be WordWrap , Right to Left, Show Unicode, Unknown
-            //                            writer.Write(delim2);
-            //                            c.AddBytes(delim2);
-
-            //                            var OriginalContentLength = ContentLength.Last();
-            //                            ContentLength.Clear();
-
-            //                            reader.ReadLEB128Unsigned();
-            //                            writer.Write(((ulong)newContent.Length / 2).WriteLEB128Unsigned());
-            //                            ContentLength.Add((ulong)newContent.Length / 2);
-            //                            c.AddBytes(ContentLength.Last());
-
-            //                            reader.ReadBytes((int)OriginalContentLength * 2);
-            //                            writer.Write(newContent);
-            //                            Content = newContent;
-            //                            c.AddBytes(Content);
-
-            //                            reader.ReadBytes(1); //Unsaved content flag This should be set to 1 or no? 
-            //                            writer.Write(true);
-            //                            Unsaved = BitConverter.GetBytes(true);
-            //                            c.AddBytes(Unsaved);
-
-            //                            reader.ReadBytes(4);
-            //                            CRC32Stored = c.CRC32;
-            //                            writer.Write(CRC32Stored);
-            //                            CRC32Calculated = c.CRC32;
-
-            //                            //TODO: Delete or Update State Files? (0.bin and 1.bin). May not matter
-            //                        }
-            //                        break;
-            //                    default: //State File
-            //                        {
-            //                            throw new Exception("State File - Not supported");
-            //                        }
-            //                }
-
-
-            //                #region Unsaved Buffer - There is no point in trying to edit these. Or is there???
-            //                if (reader.BaseStream.Length > reader.BaseStream.Position)
-            //                {
-            //                    throw new Exception("Unsaved Buffer - Not supported");
-            //                }
-            //                #endregion
-
-            //                bytes = outStream.ToArray();
-            //            }
-
-            //        }
-            //    }
-            //}
-            #endregion
         }
 
         /// <summary>
@@ -407,7 +247,7 @@ namespace NotepadStateLibrary
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public byte[] ChangeFilePath(string filePath, byte[] fileHashStored)
+        public byte[] WriteFilePath(string filePath, byte[] fileHashStored)
         {
             //TODO:
             FilePathLength = (ulong)filePath.Length;
@@ -442,11 +282,11 @@ namespace NotepadStateLibrary
                                     var un1 = reader.ReadBytes(1); //Unknown / Delimiter / 0x00
                                     c.AddBytes(un1);
 
-                                    ContentLength.Add(reader.ReadLEB128Unsigned());
-                                    c.AddBytes(ContentLength.Last());
+                                    SelectionStartIndex = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(SelectionStartIndex);
 
-                                    ContentLength.Add(reader.ReadLEB128Unsigned());
-                                    c.AddBytes(ContentLength.Last());
+                                    SelectionEndIndex = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(SelectionEndIndex);
 
                                     WordWrap = reader.ReadBytes(1);
                                     c.AddBytes(WordWrap);
@@ -457,13 +297,17 @@ namespace NotepadStateLibrary
                                     ShowUnicode = reader.ReadBytes(1);
                                     c.AddBytes(ShowUnicode);
 
-                                    var un2 = reader.ReadBytes(1); //Unknown / Delimiter / 0x00
-                                    c.AddBytes(un2);
+                                    OptionCount = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(OptionCount);
 
-                                    ContentLength.Add(reader.ReadLEB128Unsigned());
-                                    c.AddBytes(ContentLength.Last());
+                                    //Read Extra Options
+                                    Options = reader.ReadBytes((int)OptionCount);
+                                    c.AddBytes(Options);
 
-                                    Content = reader.ReadBytes((int)ContentLength.Last() * 2);
+                                    ContentLength = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(ContentLength);
+
+                                    Content = reader.ReadBytes((int)ContentLength * 2);
                                     c.AddBytes(Content);
                                     
                                     Unsaved = reader.ReadBytes(1); 
@@ -505,9 +349,9 @@ namespace NotepadStateLibrary
                                     var delim1 = reader.ReadBytes(2); //Unknown / Delimiter / 0x00 0x01 //TODO: Maybe check for when this doesn't fit the assumed?
                                     c.AddBytes(delim1);
 
-                                    SelectionStartIndex = reader.BaseStream.ReadLEB128Unsigned();
+                                    SelectionStartIndex = reader.ReadLEB128Unsigned();
                                     c.AddBytes(SelectionStartIndex);
-                                    SelectionEndIndex = reader.BaseStream.ReadLEB128Unsigned();
+                                    SelectionEndIndex = reader.ReadLEB128Unsigned();
                                     c.AddBytes(SelectionEndIndex);
 
                                     WordWrap = reader.ReadBytes(1);
@@ -519,12 +363,16 @@ namespace NotepadStateLibrary
                                     ShowUnicode = reader.ReadBytes(1);
                                     c.AddBytes(ShowUnicode);
 
-                                    var un2 = reader.ReadBytes(1); //Unknown / Delimiter / 0x00
-                                    c.AddBytes(un2);
+                                    OptionCount = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(OptionCount);
 
-                                    ContentLength.Add(reader.BaseStream.ReadLEB128Unsigned());
-                                    c.AddBytes(ContentLength.Last());
-                                    Content = reader.ReadBytes((int)ContentLength.Last() * 2);
+                                    //Read Extra Options
+                                    Options = reader.ReadBytes((int)OptionCount);
+                                    c.AddBytes(Options);
+
+                                    ContentLength = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(ContentLength);
+                                    Content = reader.ReadBytes((int)ContentLength * 2);
                                     c.AddBytes(Content);
 
                                     Unsaved = reader.ReadBytes(1); 
@@ -560,8 +408,12 @@ namespace NotepadStateLibrary
                                     ShowUnicode = reader.ReadBytes(1);
                                     c.AddBytes(ShowUnicode);
 
-                                    var un2 = reader.ReadBytes(1); //Unknown / Delimiter / 0x00
-                                    c.AddBytes(un2);
+                                    OptionCount = reader.ReadLEB128Unsigned();
+                                    c.AddBytes(OptionCount);
+
+                                    //Read Extra Options
+                                    Options = reader.ReadBytes((int)OptionCount);
+                                    c.AddBytes(Options);
 
                                     CRC32Stored = reader.ReadBytes(4);
                                     CRC32Calculated = c.CRC32;
@@ -619,11 +471,11 @@ namespace NotepadStateLibrary
                                 writer.Write(Unsaved);
                                 c.AddBytes(Unsaved);
 
-                                writer.Write(ContentLength.Last().WriteLEB128Unsigned());
-                                c.AddBytes(ContentLength.Last());
+                                writer.Write(SelectionStartIndex.WriteLEB128Unsigned());
+                                c.AddBytes(SelectionStartIndex);
 
-                                writer.Write(ContentLength.Last().WriteLEB128Unsigned());
-                                c.AddBytes(ContentLength.Last());
+                                writer.Write(SelectionEndIndex.WriteLEB128Unsigned());
+                                c.AddBytes(SelectionEndIndex);
 
                                 writer.Write(WordWrap);
                                 c.AddBytes(WordWrap);
@@ -634,11 +486,18 @@ namespace NotepadStateLibrary
                                 writer.Write(ShowUnicode);
                                 c.AddBytes(ShowUnicode);
 
-                                writer.Write([0x00]);
-                                c.AddBytes([0x00]);
+                                writer.Write(OptionCount);
+                                c.AddBytes(OptionCount);
 
-                                writer.Write(ContentLength.Last().WriteLEB128Unsigned());
-                                c.AddBytes(ContentLength.Last());
+                                //Write Extra Options
+                                if (OptionCount > 0)
+                                {
+                                    writer.Write(Options);
+                                    c.AddBytes(Options);
+                                }
+
+                                writer.Write(ContentLength.WriteLEB128Unsigned());
+                                c.AddBytes(ContentLength);
 
                                 writer.Write(Content);
                                 c.AddBytes(Content);
@@ -694,11 +553,18 @@ namespace NotepadStateLibrary
                                 writer.Write(ShowUnicode);
                                 c.AddBytes(ShowUnicode);
 
-                                writer.Write([0x00]);
-                                c.AddBytes([0x00]);
+                                writer.Write(OptionCount);
+                                c.AddBytes(OptionCount);
 
-                                writer.Write(ContentLength.Last().WriteLEB128Unsigned());
-                                c.AddBytes(ContentLength.Last());
+                                //Write Extra Options
+                                if (OptionCount > 0)
+                                {
+                                    writer.Write(Options);
+                                    c.AddBytes(Options);
+                                }
+
+                                writer.Write(ContentLength.WriteLEB128Unsigned());
+                                c.AddBytes(ContentLength);
 
                                 writer.Write(Content);
                                 c.AddBytes(Content);
@@ -737,8 +603,15 @@ namespace NotepadStateLibrary
                                 writer.Write(ShowUnicode);
                                 c.AddBytes(ShowUnicode);
 
-                                writer.Write([0x00]);
-                                c.AddBytes([0x00]);
+                                writer.Write(OptionCount);
+                                c.AddBytes(OptionCount);
+
+                                //Write Extra Options
+                                if (OptionCount > 0)
+                                {
+                                    writer.Write(Options);
+                                    c.AddBytes(Options);
+                                }
 
                                 CRC32Stored = c.CRC32;
                                 CRC32Calculated = c.CRC32;
