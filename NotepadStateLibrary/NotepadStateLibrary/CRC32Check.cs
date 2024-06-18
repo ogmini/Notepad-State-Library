@@ -25,5 +25,10 @@ namespace NotepadStateLibrary
         {
             AddBytes(value.WriteLEB128Unsigned());
         }
+
+        public void AddBytes(uint value)
+        {
+            AddBytes(BitConverter.GetBytes(value));
+        }
     }
 }
