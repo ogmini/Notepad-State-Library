@@ -120,8 +120,8 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 - Sequence Number (uLEB128)
 - TypeFlag (uLEB128)
 - :question:Unknown [0x01]
-- SelectionStartIndex (uLEB128) - Never differs from ContentLength
-- SelectionEndIndex (uLEB128) - Never differs from ContentLength
+- SelectionStartIndex (uLEB128) 
+- SelectionEndIndex (uLEB128)
 - [Configuration Block](#configuration-block)
 - ContentLength (uLEB128)
 - Content (Variable)
@@ -215,10 +215,10 @@ It appears that the windowstate files will never reduce in size. More testing is
 
 There is a potential to recover complete or partial GUIDs from the slack space that can be tied back to past tabstate files. These deleted tabstate files could possibly be recovered and examined.  
 
+##### Approaches
+
 > [!WARNING]  
 > The approaches make heavy assumptions. As Tabs are opened and closed, the slack space will get more and more convoluted and disarrayed. Manual parsing is suggested and there is no guarantee of being able to recover anything of use. 
-
-##### Approaches
 
 WIP
 
@@ -230,23 +230,25 @@ WIP
 > Relevant Files
 > `settings.dat`
 
-The settings files store application wide settings and defaults. The file is an application hive which can be opened with RegEdit and other tools which can handle registry files. 
+The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with RegEdit and other tools which can handle registry files. There is a Binary Template file for 010 Editor that I've updated. 
 
-Settings.dat / Application Hive
+#### Useful Links / Information
 
 [Application Hives](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/filtering-registry-operations-on-application-hives)
+
 [Windows Store App Settings](https://lunarfrog.com/blog/inspect-app-settings)
+
 [Manipulating Windows Store App Settings](https://www.damirscorner.com/blog/posts/20150117-ManipulatingSettingsDatFileWithSettingsFromWindowsStoreApps.html)
+
 [UWP App Data Storage](https://helgeklein.com/blog/uwp-universal-windows-app-data-storage-admins/)
 
 [REGF Format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
-[Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
-For now, opening this file with RegEdit makes it readable. There is a Binary Template file for 010 Editor that I've updated.
+[Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
 #### Behavior
 
-If a key doesn't exist that option hasn't been changed from the default. 
+If a key doesn't exist that option hasn't been changed from the default or set. 
 
 #### File Format
 
