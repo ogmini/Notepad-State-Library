@@ -47,6 +47,8 @@ The information below has been tested/validated on the following configurations:
 |---|---|
 | Windows 11 23H2 OS Build 22635.3566 (Beta Release Branch) | 11.2402.22.0
 | Windows 11 23H2 OS Build 22631.3527 (Stable Release Branch) | 11.2402.22.0
+| Windows 11 23H2 OS Build 22631.3737 (Stable Release Branch) | 11.2404.10.0
+
 
 - [Tabstate](#tabstate)
 - [Windowstate](#windowstate)
