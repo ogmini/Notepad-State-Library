@@ -21,6 +21,7 @@ This library and its tools could be useful in forensic investigations or even in
 ## Acknowledgements
 
 In random order:
+
 [jlogsdon](https://github.com/jlogsdon)   
 [NordGaren](https://github.com/Nordgaren)  
 [JustArion](https://github.com/JustArion)  
