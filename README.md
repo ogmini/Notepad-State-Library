@@ -24,7 +24,7 @@ In random order:
 
 [jlogsdon](https://github.com/jlogsdon)   
 [NordGaren](https://github.com/Nordgaren)  
-[JohnHammond](https://github.com/JohnHammond) 
+[JohnHammond](https://github.com/JohnHammond)   
 [JustArion](https://github.com/JustArion)  
 [joost-j](https://github.com/joost-j)   
 [daddycocoaman](https://github.com/daddycocoaman)
