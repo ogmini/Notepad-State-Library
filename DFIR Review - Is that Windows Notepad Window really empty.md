@@ -1,4 +1,4 @@
-# Windows Notepad: Dissecting a snitch
+# Is that Windows Notepad window really empty?
 
 ## SYNOPSIS
 
