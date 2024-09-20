@@ -3,7 +3,7 @@
 ## SYNOPSIS
 
 ### Forensics Question:  
-Insert Here 
+What artifacts can we recover from Windows Notepad now that it supports tabs, unsaved files, and more? 
 ### OS Version:  
 - Microsoft Windows 11 23H2 Build 22631 (Original Tests)
 - Microsoft Windows 11 23H2 Build 22635 (Original Tests)
