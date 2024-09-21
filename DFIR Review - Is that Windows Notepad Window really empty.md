@@ -23,8 +23,10 @@ https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-to
 https://blogs.windows.com/windows-insider/2023/01/19/tabs-in-notepad-begins-rolling-out-to-windows-insiders/
 https://blogs.windows.com/windows-insider/2021/12/07/redesigned-notepad-for-windows-11-begins-rolling-out-to-windows-insiders/
 
-## Research
+## Relevant Files
 
-## Findings
+## Deciphering the Files
 
-## Tool
+## Artifacts
+
+## Conclusion
