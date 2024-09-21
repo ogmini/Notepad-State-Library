@@ -3,7 +3,9 @@
 ## SYNOPSIS
 
 ### Forensics Question:  
-What artifacts can we recover from Windows Notepad now that it supports multiple tabs, saving session state, and multi-level undo?
+What artifacts can we recover from Windows Notepad now that it supports multiple tabs, saving session state, and multi-level undo?   
+What evidence can be lost if you close Windows Notepad?   
+What evidence can be lost if you open Windows Notepad?
 
 ### OS Version:  
 - Microsoft Windows 11 23H2 Build 22631 (Original Tests)
