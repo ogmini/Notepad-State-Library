@@ -14,6 +14,7 @@ The following are planned/completed:
 - [ ] Tabstate Manipulator
 - [ ] Windowstate Manipulator
 - [ ] Settings.dat / Application Registry
+- [ ] Ways to detect manipulation
 - [ ] POC Malware
 
 This library and its tools could be useful in forensic investigations or even in the toolbox for a red/purple team.
