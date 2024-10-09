@@ -40,10 +40,8 @@ In random order:
 ### Library
 Documentation WIP
 ### Pattern Files
-Binary Template for 010 Editor and Pattern File for ImHex have been submitted to their respective repositories and should be available for use. 
-### Tabstate Parser
-Documentation WIP
-### Windowstate Parser
+Binary Templates for 010 Editor and Pattern Files for ImHex have been submitted to their respective repositories and should be available for use. They can also be found in this repository at [https://github.com/ogmini/Notepad-State-Library/tree/main/PatternFiles](https://github.com/ogmini/Notepad-State-Library/tree/main/PatternFiles).
+### Parser
 Documentation WIP
 
 ## Information
@@ -57,11 +55,6 @@ The information below has been tested/validated on the following configurations:
 | Windows 11 23H2 OS Build 22631.3737 (Stable Release Branch) | 11.2404.10.0
 | Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch)| 11.2407.9.0
 
-
-- [Tabstate](#tabstate)
-- [Windowstate](#windowstate)
-- [Settings](#settings)
-
 ### Tabstate 
 
 > [!NOTE]
@@ -72,24 +65,24 @@ The information below has been tested/validated on the following configurations:
 > `*.bin` `*.0.bin` `*.1.bin`
 
 The tabstate files store information about the open tabs and their contents in Windows Notepad. The filenames are GUIDs and there are three types of *.bin files:
-- File Tab
+- _File Tab_
 	- These tabs have been saved to disk or have been opened from a file on disk 
-- No File Tab
-	- These tabs have not been saved to disk and have not been opened from a file on disk. They only exist in the buffer 
-- State File
+- _No File Tab_
+	- These tabs have not been saved to disk and have not been opened from a file on disk. They only exist in the *.bin files
+- _State File_
 	- These are the *.0.bin and *.1.bin files and store option information about the related matching GUID *.bin
 
-Both the File and No File Tab can have related State Files. 
+Both the _File Tab_ and _No File Tab_ can have related _State Files_. 
 
-While Windows Notepad is open the File and No File Tab can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been saved or consolidated. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are consolidated into the content. 
+While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content. 
 
 #### Behavior
 
-Opening Windows Notepad with no currently existing tab(s) will create an empty "Untitled" tab and an associated No File Tab bin file.
+Opening Windows Notepad with no currently existing tab(s) will create an empty "Untitled" tab and an associated _No File Tab_ bin file.
 
-Creating new tab(s) will create associated No File Tab bin file(s).
+Creating new tab(s) will create associated _No File Tab_ bin file(s).
 
-Opening file(s) from disk will create associated File Tab bin file(s).
+Opening file(s) from disk will create associated _File Tab_ bin file(s).
 
 Closing tab(s) will delete the associated bin file(s). 
 
@@ -100,7 +93,7 @@ The existence of no bin file(s) indicates:
 - All tabs have been manually closed
 - Manual deletion
 
-If you drag/drop multiple files into Windows Notepad, the internal content of the bin file(s) will not load until the tab becomes active. (To be expaned upon)
+If you drag/drop multiple files into Windows Notepad, the internal content of the bin file(s) will not load until the tab becomes active. (To be expanded upon)
 
 #### File Format
 
@@ -209,10 +202,10 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 - ActiveTab (uLEB128)
 - TopLeftCoords 
 	- X (uINT32)
-	- Y uINT32)
+	- Y (uINT32)
 - BottomRightCoords 
 	- X (uINT32)
-	- Y uINT32)
+	- Y (uINT32)
 - WindowSize 
 	- Width (uINT32)
 	- Height (uINT32)
