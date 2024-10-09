@@ -14,15 +14,22 @@ The following are planned/completed:
 - [ ] Tabstate Manipulator
 - [ ] Windowstate Manipulator
 - [ ] Settings.dat / Application Registry
+- [ ] Ways to detect manipulation
 - [ ] POC Malware
 
 This library and its tools could be useful in forensic investigations or even in the toolbox for a red/purple team.
 
 ## Acknowledgements
 
-[jlogsdon](https://github.com/jlogsdon) for lots of help.  
-[NordGaren](https://github.com/Nordgaren) for lots of help, his [tabstate-util](https://github.com/Nordgaren/tabstate-util/), and 010 Editor Binary Template file which helped me learn the syntax and the struct/functions for uLEB128.   
-[JustArion](https://github.com/JustArion) for lots of help and his [ImHex Pattern File](https://github.com/JustArion/Notepad-Tabs/blob/main/ImHex-Patterns/NotepadTab.hexpat) which helped me learn the syntax.
+In random order:
+
+[jlogsdon](https://github.com/jlogsdon)   
+[NordGaren](https://github.com/Nordgaren)  
+[JohnHammond](https://github.com/JohnHammond)   
+[JustArion](https://github.com/JustArion)  
+[joost-j](https://github.com/joost-j)   
+[daddycocoaman](https://github.com/daddycocoaman)
+
 
 ## Usage
 > [!WARNING]
