@@ -1,0 +1,158 @@
+//------------------------------------------------
+//--- 010 Editor v15.0 Binary Template
+//
+//      File: Notepad-TabState.bt
+//   Authors: ogmini (https://github.com/ogmini), NordGaren (https://github.com/nordgaren/)
+//   Version: 0.1
+//   Purpose: Template to make sense of the Tab State file for Windows 11 Notepad
+//  Category: Misc
+// File Mask: *.bin 
+//  ID Bytes: 4E 50 //NP
+//   History: 
+//   0.1   2024-10-09 ogmini: Initial version
+//------------------------------------------------
+
+//------------------------------------------------
+//                   Structs
+//------------------------------------------------
+
+typedef struct {
+    do {
+        ubyte bytes;
+    } while (bytes > 0x7F);
+} Uleb128 <read=Uleb128ValueToStr>;
+
+enum <ubyte> TypeFlag { 
+    Unsaved = 0, 
+    Saved = 1, 
+};
+
+enum <ubyte> Encoding { 
+    ANSI = 1,
+    UTF16LE = 2,
+    UTF16BE = 3,
+    UTF8BOM = 4,
+    UTF8 = 5,
+};
+
+enum <ubyte> CarriageType { 
+    Windows_CRLF = 1,
+    Macintosh_CR = 2,
+    Unix_LF = 3,
+};
+
+typedef struct {
+    char  Magic_Bytes[2] <bgcolor=cDkBlue>;
+    Uleb128   Sequence_Number;
+    TypeFlag   Type_Flag <bgcolor=cBlue>;
+} Header;
+
+typedef struct {
+    Uleb128  FilePathLength;
+    wchar_t FilePath[DecodeUleb128(FilePathLength)]  <bgcolor=cWhite>;
+    
+} FilePathBuffer;
+
+typedef struct {
+    Uleb128  ContentLength;
+    wchar_t Content[DecodeUleb128(ContentLength)]  <bgcolor=cWhite>;
+    
+} ContentBuffer;
+
+typedef struct {
+    Encoding EncodingType <bgcolor=cGreen>;
+    CarriageType CarriageReturnType <bgcolor=cLtGreen>;
+    Uleb128 Timestamp <bgcolor=cDkGreen,comment="18-digit Win32 FILETIME">;  
+    ubyte FileHash[0x20]    <bgcolor=cPurple,format=hex>;
+
+} Metadata;
+
+typedef struct { 
+    Uleb128 SelectionStartIndex <bgcolor=cDkAqua>;
+    Uleb128 SelectionEndIndex <bgcolor=cLtAqua>;
+} CursorData;
+
+typedef struct {
+    ubyte WordWrap <bgcolor=cYellow>;
+    ubyte RightToLeft <bgcolor=cLtYellow>;
+    ubyte ShowUnicode <bgcolor=cDkYellow>;
+    Uleb128 MoreOptions;
+    
+    local int x;
+    
+    for (x=0; x < DecodeUleb128(MoreOptions); x++)
+    {
+        ubyte unknown_options <bgcolor=cRed, comment="Spellcheck/Autocorrect? Do not seem to be flags...">;
+    }
+} TabStateOptions;
+
+typedef struct {
+    Uleb128 CursorPosition <bgcolor=cAqua>;
+    Uleb128 DeletionAction <bgcolor=cLtAqua>;
+    Uleb128 AdditionAction <bgcolor=cDkAqua>;
+    char AddedCharacters[DecodeUleb128(AdditionAction)*2] <bgcolor=cWhite>; 
+    uint32 crc32 <bgcolor=cPurple, format=hex>;  
+} UnsavedBufferChunk;
+
+//------------------------------------------------
+//                   Funcs
+//------------------------------------------------
+
+uint64 DecodeUleb128(Uleb128 &varint) {
+    local uint64 val = 0;
+    local int i;
+    local uint64 num;
+    for( i = 0; i < sizeof(varint); i++ ) {
+        num = varint.bytes[i] & 0x7F;
+        val |= num << (i * 7);
+    }
+    return val;
+}
+
+string Uleb128ValueToStr(Uleb128 &varint) {
+    return Str("%u", DecodeUleb128(varint));
+}
+
+//------------------------------------------------
+//                   File
+//------------------------------------------------
+
+Header HeaderInfo;
+
+switch (HeaderInfo.Type_Flag)
+{
+    case 0:
+        ubyte unk <bgcolor=cRed, comment="Appears to always be 0x1">;
+    break;
+    case 1:
+        FilePathBuffer FilePath;
+        Uleb128 SavedFileContentLength;
+        Metadata FileMetaData;
+        ubyte unk <bgcolor=cRed, comment="Appears to always be 0x0">; 
+        ubyte unk2 <bgcolor=cRed, comment="Appears to always be 0x1">; 
+        break;
+    default:
+        ubyte unknown <bgcolor=cRed, comment="Appears to always be 0x0">;
+        Uleb128 BinSize <comment="Size in bytes of the associated *.bin">; 
+        break;
+}
+
+CursorData CursorPosition;
+TabStateOptions ConfigurationBlock;
+
+switch (HeaderInfo.Type_Flag)
+{
+    case 0:
+    case 1:
+        ContentBuffer Content;
+        ubyte Unsaved;
+        break;
+    default:
+        break;   
+}
+
+uint32 crc32 <bgcolor=cPurple,comment="CRC32 of .bin", format=hex>;
+
+while (!FEof()) {
+       UnsavedBufferChunk ubc;
+}
