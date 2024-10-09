@@ -6,6 +6,12 @@ namespace NotepadStateLibrary
 {
     public class NPTabState
     {
+        //TODO: Reorder these to a sensical order?
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string FileName { get; private set; }
         /// <summary>
         /// Size of the associated bin file in bytes for the 0.bin or 1.bin file.
         /// </summary>
@@ -31,6 +37,10 @@ namespace NotepadStateLibrary
         /// <summary>
         /// Calculated CRC32
         /// </summary>
+        public string ContentString
+        {
+            get { return Content == null ? string.Empty : Encoding.Unicode.GetString(Content).ReplaceLineEndings(); } 
+        }
         public byte[] CRC32Calculated { get; private set; } = null!;
         /// <summary>
         /// CRC32 from the file
@@ -115,9 +125,10 @@ namespace NotepadStateLibrary
         /// Notepad Tab State Files
         /// </summary>
         /// <param name="bytes">Bytes of the state file</param>
-        public NPTabState(byte[] bytes)
+        public NPTabState(byte[] bytes, string fileName)
         {
             this.bytes = bytes;
+            this.FileName = fileName;
 
             UnsavedBufferChunks = new List<UnsavedBufferChunk>();
 

@@ -5,6 +5,12 @@ namespace NotepadStateLibrary
 {
     public class NPWindowState
     {
+        //TODO: Reorder these to a sensical order?
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string FileName { get; private set; }
         /// <summary>
         /// Number of the active tab in Notepad. 0 based index.
         /// </summary>
@@ -56,9 +62,10 @@ namespace NotepadStateLibrary
         /// Notepad Window State Files
         /// </summary>
         /// <param name="bytes">bytes of the state file</param>
-        public NPWindowState(byte[] bytes) 
+        public NPWindowState(byte[] bytes, string fileName) 
         {
             this.bytes = bytes;
+            this.FileName = fileName;
 
             Tabs = new List<byte[]>();
 
