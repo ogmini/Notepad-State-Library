@@ -55,6 +55,7 @@ The information below has been tested/validated on the following configurations:
 | Windows 11 23H2 OS Build 22635.3566 (Beta Release Branch) | 11.2402.22.0
 | Windows 11 23H2 OS Build 22631.3527 (Stable Release Branch) | 11.2402.22.0
 | Windows 11 23H2 OS Build 22631.3737 (Stable Release Branch) | 11.2404.10.0
+| Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch)| 11.2407.9.0
 
 
 - [Tabstate](#tabstate)
@@ -106,7 +107,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 ##### File Tab
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
-- TypeFlag (uLEB128)
+- TypeFlag (uLEB128) (1 TypeFlag)
 - FilePathLength (uLEB128)
 - FilePath (Variable)
 - SavedFileContentLength (uLEB128)
@@ -127,7 +128,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 ##### No File Tab
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
-- TypeFlag (uLEB128)
+- TypeFlag (uLEB128) (0 TypeFlag)
 - :question:Unknown [0x01]
 - SelectionStartIndex (uLEB128) 
 - SelectionEndIndex (uLEB128)
@@ -141,7 +142,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 ##### State File
 - Signature / Magic Bytes [0x4E, 0x50] "NP" 
 - Sequence Number (uLEB128)
-- TypeFlag (uLEB128)
+- TypeFlag (uLEB128) (Greater than 1 TypeFlag)
 - :question:Unknown [0x00]
 - BinSize (uLEB128)
 - SelectionStartIndex (uLEB128)
