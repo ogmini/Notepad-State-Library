@@ -448,8 +448,9 @@ namespace NotepadStateLibrary
                             c.AddBytes(charAddition);
 
                             var charAdded = reader.ReadBytes((int)charAddition * 2);
+                            c.AddBytes(charAdded);
 
-                            UnsavedBufferChunk chnk = new UnsavedBufferChunk(charPos, charDeletion, charAddition, charAdded, reader.ReadBytes(4), c.CRC32);
+                            UnsavedBufferChunk chnk = new UnsavedBufferChunk(FileName, charPos, charDeletion, charAddition, charAdded, reader.ReadBytes(4), c.CRC32);
                             UnsavedBufferChunks.Add(chnk);
                         }
                         #endregion

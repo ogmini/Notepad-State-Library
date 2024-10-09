@@ -52,6 +52,7 @@ Parser.Default.ParseArguments<Options>(args)
                 List<NPTabState> noFileTabs = new List<NPTabState>();
                 List<NPTabState> stateTabs = new List<NPTabState>();
                 List<NPWindowState> windowStateTabs = new List<NPWindowState>();
+                List<UnsavedBufferChunk> unsavedChunks = new List<UnsavedBufferChunk>();
 
                 //Tabstate
                 foreach (var path in Directory.EnumerateFiles(tabStateLocation, "*.bin"))
@@ -77,6 +78,20 @@ Parser.Default.ParseArguments<Options>(args)
                                 default:
                                     stateTabs.Add(np);
                                     break;
+                            }
+
+                            if (np.UnsavedBufferChunks.Count > 0)
+                            {
+                                string fileName = Path.GetFileNameWithoutExtension(path) + "UnsavedBufferChunks";
+                                using (var writer = new StreamWriter(Path.Combine(outputLocation,fileName)))
+                                {
+                                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                                    {
+                                        csv.WriteHeader<UnsavedBufferChunk>();
+                                        csv.NextRecord();
+                                        csv.WriteRecords(np.UnsavedBufferChunks);
+                                    }
+                                }
                             }
                         }
                     }
