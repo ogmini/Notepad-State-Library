@@ -2,6 +2,7 @@
 using CsvHelper;
 using System.Globalization;
 using CommandLine;
+using System.IO;
 
 Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
@@ -55,23 +56,28 @@ Parser.Default.ParseArguments<Options>(args)
                 //Tabstate
                 foreach (var path in Directory.EnumerateFiles(tabStateLocation, "*.bin"))
                 {
-                    byte[] b = File.ReadAllBytes(path);
-                    if (b.Length > 0)
+                    using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        Console.WriteLine("Processing TabState - {0}", Path.GetFileName(path));
-                        NPTabState np = new NPTabState(b, Path.GetFileName(path));
+                        byte[] data = new byte[fileStream.Length];
+                        fileStream.Read(data);
 
-                        switch (np.TypeFlag)
+                        if (data.Length > 0)
                         {
-                            case 0:
-                                noFileTabs.Add(np);
-                                break;
-                            case 1:
-                                fileTabs.Add(np);
-                                break;
-                            default:
-                                stateTabs.Add(np);
-                                break;
+                            Console.WriteLine("Processing TabState - {0}", Path.GetFileName(path));
+                            NPTabState np = new NPTabState(data, Path.GetFileName(path));
+
+                            switch (np.TypeFlag)
+                            {
+                                case 0:
+                                    noFileTabs.Add(np);
+                                    break;
+                                case 1:
+                                    fileTabs.Add(np);
+                                    break;
+                                default:
+                                    stateTabs.Add(np);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -112,12 +118,17 @@ Parser.Default.ParseArguments<Options>(args)
                 //Windowstate
                 foreach (var path in Directory.EnumerateFiles(windowStateLocation, "*.bin"))
                 {
-                    byte[] b = File.ReadAllBytes(path);
-                    if (b.Length > 0)
+                    using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        Console.WriteLine("Processing WindowState - {0}", Path.GetFileName(path));
-                        NPWindowState np = new NPWindowState(b, Path.GetFileName(path));
-                        windowStateTabs.Add(np);
+                        byte[] data = new byte[fileStream.Length];
+                        fileStream.Read(data);
+
+                        if (data.Length > 0)
+                        {
+                            Console.WriteLine("Processing WindowState - {0}", Path.GetFileName(path));
+                            NPWindowState np = new NPWindowState(data, Path.GetFileName(path));
+                            windowStateTabs.Add(np);
+                        }
                     }
                 }
 
