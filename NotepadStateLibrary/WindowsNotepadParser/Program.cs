@@ -2,7 +2,7 @@
 using CsvHelper;
 using System.Globalization;
 using CommandLine;
-using System.IO;
+using WindowsNotepadParser;
 
 Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
@@ -82,8 +82,9 @@ Parser.Default.ParseArguments<Options>(args)
 
                             if (np.UnsavedBufferChunks.Count > 0)
                             {
-                                string fileName = Path.GetFileNameWithoutExtension(path) + "UnsavedBufferChunks";
-                                using (var writer = new StreamWriter(Path.Combine(outputLocation,fileName)))
+                                Console.WriteLine("Processing Unsaved Buffer Chunks for TabState - {0}", Path.GetFileName(path));
+
+                                using (var writer = new StreamWriter(Path.Combine(outputLocation,string.Format("{0}-UnsavedBufferChunks.csv", Path.GetFileNameWithoutExtension(path)))))
                                 {
                                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                                     {
@@ -92,6 +93,8 @@ Parser.Default.ParseArguments<Options>(args)
                                         csv.WriteRecords(np.UnsavedBufferChunks);
                                     }
                                 }
+
+                                ContentToImage ci = new ContentToImage(np.ContentString, np.UnsavedBufferChunks,string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
                             }
                         }
                     }
@@ -186,6 +189,4 @@ public class Options
 
     [Option('o', "outputlocation", Required = false, HelpText = "Output Folder Location for CSV files. Default location is same folder as program.")]
     public string outputLocation { get; set; }
-
-
 }
