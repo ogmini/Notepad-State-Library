@@ -9,6 +9,7 @@
 // File Mask: *.bin 
 //  ID Bytes: 4E 50 //NP
 //   History: 
+//   0.2   2024-10-11 ogmini: Additions to TypeFlag enum, correction to AddedCharacters
 //   0.1   2024-10-09 ogmini: Initial version
 //------------------------------------------------
 
@@ -25,6 +26,8 @@ typedef struct {
 enum <ubyte> TypeFlag { 
     Unsaved = 0, 
     Saved = 1, 
+    NoFileTab = 10,
+    FileTab = 11
 };
 
 enum <ubyte> Encoding { 
@@ -90,7 +93,7 @@ typedef struct {
     Uleb128 CursorPosition <bgcolor=cAqua>;
     Uleb128 DeletionAction <bgcolor=cLtAqua>;
     Uleb128 AdditionAction <bgcolor=cDkAqua>;
-    char AddedCharacters[DecodeUleb128(AdditionAction)*2] <bgcolor=cWhite>; 
+    wchar_t AddedCharacters[DecodeUleb128(AdditionAction)] <bgcolor=cWhite>; 
     uint32 crc32 <bgcolor=cPurple, format=hex>;  
 } UnsavedBufferChunk;
 

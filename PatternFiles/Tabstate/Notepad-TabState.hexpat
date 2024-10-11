@@ -44,8 +44,10 @@ enum EOLSequenceType : byte
 
 enum TypeFlag : byte
 {
+	Unsaved = 0,
     Saved = 1,
-    Unsaved = 0
+    NoFileTab = 10,
+	FileTab = 11
 };
 
 struct Header
