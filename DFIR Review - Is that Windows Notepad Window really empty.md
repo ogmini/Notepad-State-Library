@@ -60,6 +60,7 @@ The tabstate files store information about the open tabs and their contents in W
 
 Both the _File Tab_ and _No File Tab_ can have related _State Files_. EXPAND/CHECK UPON THIS
 
+FILE TAB   
 Notepad is open with SavedFileNoChanges and SavedFileChanges. No state files. Closing Notepad while active tab = SavedFileNoChanges creates state files for the SavedFileNoChanges. Reopening Windows Notepad deletes the state files. Cycle Repeats.
 
 Closing Notepad while active tab = SavedFileChanges results in creating both state files. Reopening makes no changes. Closing makes no changes. 
@@ -67,6 +68,14 @@ Closing Notepad while active tab = SavedFileChanges results in creating both sta
 Changing the active tab to the SavedFileNoChanges deletes its state files
 
 Changing the active tab to the SavedFileChanges makes no changes
+
+(Need to check if making any changes influences the above)
+
+NO FILE TAB   
+Notepad is open with New condition tab. No state files. Close Notepad, state files created. Reopen no change. Close notepad no change.
+
+If any changes are made to the content, the state files will be deleted. But will be recreated upon closing notepad with no changes.
+
 
 While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content. VERIFY THIS (It appears that unsaved buffer chunks for a File Tab that has unsaved changes will persist)
 
@@ -130,13 +139,18 @@ The image below displays an example of a tab in the Reopened condition with text
 |---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Increments and highest number signifies the active state file|
-|TypeFlag|uLEB128|Greater than 1|
+|TypeFlag|uLEB128|10 = No File Tab / 11 = File Tab|
 |:question:Unknown|1 byte|[0x00]|
 |BinSize|uLEB128|Size in bytes of the associated *.bin file| 
 |SelectionStartIndex|uLEB128|Start position of text selection|
 |SelectionEndIndex|uLEB128|End position of text selection|
 |[Configuration Block](#configuration-block)|||
 |CRC32|4 bytes|CRC32 Check|
+
+The image below displays an example of the state file for a No File Tab. Take note of the TypeFlag.   
+![010 Editor view of the state file for a No File Tab](/Images/State%20-%20No%20File.png)  
+The image below displays an example of the state file for a File Tab. Take note of the TypeFlag.   
+![010 Editor view of the state file for a File Tab](/Images/State%20-%20File.png)
 
 #### Configuration Block Format
 |Name|Type|Notes|
@@ -146,6 +160,11 @@ The image below displays an example of a tab in the Reopened condition with text
 |ShowUnicode|1 byte|ShowUnicode flag|
 |Version/MoreOptions|uLEB128|Number of More Options in bytes that follow|
 |[More Options Block](#more-options-block)|||
+
+The image below shows the WordWrap option in Windows Notepad. This setting is specific to the Tab.  
+![Windows Notepad Settings View](/Images/Settings.png)  
+The image below shows the RightToLeft and ShowUnicode options in the Right-Click menu for Windows Notepad. These settings are specific to the Tab.  
+![Windows Notepad Settings View](/Images/RightClickOptions.png)  
 
 #### More Options Block Format
 |Name|Type|Notes|
@@ -162,6 +181,13 @@ The image below displays an example of a tab in the Reopened condition with text
 |Addition Action|uLEB128|Number of Characters added|
 |Added Characters|UTF-16LE (Variable Length)|Characters added with length determined from Addition Action|
 |CRC32|4 bytes|CRC32 Check of Unsaved Buffer Chunk|
+
+The image below shows the Unsaved Buffer Chunk for pasting a block of text. This is also similar to typing individual letters.  
+![010 Editor view of Unsaved Buffer Chunk for pasting a block of text](/Images/Pasted%20Text%20Block.png)  
+The image below shows the Unsaved Buffer Chunk for deleting a block of text. This is also similar to deleting individual letters.  
+![010 Editor view of Unsaved Buffer Chunk for deleting a block of text](/Images/Deleted%20Text%20Block.png)  
+The image below shows the Unsaved Buffer Chunk for overwriting a block of text. This is also similar to inserting individual letters.  
+![010 Editor view of Unsaved Buffer Chunk for overwriting a block of text](/Images/Overwrite%20Text.png)  
 
 ### Windowstate 
 
