@@ -56,7 +56,7 @@ The tabstate files store information about the open tabs and their contents in W
     - They have a TypeFlag of 0.
 - _State File_
     - These are the *.0.bin and *.1.bin files and store extra information about the related matching GUID *.bin. 
-    - They have a TypeFlag greater than 1.
+    - They have a TypeFlag of 10 or 11.
 
 Both the _File Tab_ and _No File Tab_ can have related _State Files_. EXPAND/CHECK UPON THIS
 
@@ -139,7 +139,7 @@ The image below displays an example of a tab in the Reopened condition with text
 |---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Increments and highest number signifies the active state file|
-|TypeFlag|uLEB128|10 = No File Tab / 11 = File Tab|
+|TypeFlag|uLEB128|10 = No File Tab State / 11 = File Tab State|
 |:question:Unknown|1 byte|[0x00]|
 |BinSize|uLEB128|Size in bytes of the associated *.bin file| 
 |SelectionStartIndex|uLEB128|Start position of text selection|
@@ -218,6 +218,8 @@ Creating a new Windows Notepad window by dragging a tab outside of the original 
 
 Updates alternate between the *.0.bin and *.1.bin with the most up to date file having the greatest sequence number.
 
+Only the window state file for the last closed Windows Notepad is kept.
+
 #### File Format
 |Name|Type|Notes|
 |---|---|---|
@@ -238,12 +240,13 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 |CRC32|4 bytes|CRC32 Check|
 |[Slack Space](#slack-space)|Variable||
 
+The image below shows the Windowstate for Windows Notepad with three tabs and the middle tab being active.  
+![010 Editor view of Windowstate for multiple tabs](/Images/Windowstate.png)  
+
 #### Slack Space
 It appears that the windowstate files will never reduce in size. More testing is required to validate this or to discover what actions will cause them to be deleted or cleared out.
 
 There is a potential to recover complete or partial GUIDs from the slack space that can be tied back to past tabstate files. These deleted tabstate files could possibly be recovered and examined.  
-
-##### Approaches
 
 > [!WARNING]  
 > The approaches make heavy assumptions. As Tabs are opened and closed, the slack space will get more and more convoluted and disarrayed. Manual parsing is suggested and there is no guarantee of being able to recover anything of use. 

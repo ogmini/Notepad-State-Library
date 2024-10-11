@@ -46,8 +46,8 @@ enum TypeFlag : byte
 {
 	Unsaved = 0,
     Saved = 1,
-    NoFileTab = 10,
-	FileTab = 11
+    NoFileTabState = 10,
+	FileTabState = 11
 };
 
 struct Header

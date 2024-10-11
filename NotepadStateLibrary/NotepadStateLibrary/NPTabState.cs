@@ -105,6 +105,8 @@ namespace NotepadStateLibrary
         /// <summary>
         /// <para>0 = Unsaved Tab</para>
         /// <para>1 = Saved Tab</para>
+        /// <para>10 = NoFileTabState</para>
+        /// <para>11 = FileTabState</para>
         /// <para>Other = State File</para>
         /// </summary>
         public ulong TypeFlag { get; private set; }

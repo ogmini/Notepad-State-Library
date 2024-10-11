@@ -26,8 +26,8 @@ typedef struct {
 enum <ubyte> TypeFlag { 
     Unsaved = 0, 
     Saved = 1, 
-    NoFileTab = 10,
-    FileTab = 11
+    NoFileTabState = 10,
+    FileTabState = 11
 };
 
 enum <ubyte> Encoding { 
