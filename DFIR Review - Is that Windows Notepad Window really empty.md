@@ -13,7 +13,7 @@ What evidence can be lost if you open Windows Notepad?
 ### Tools:
 - ImHex
 - 010 Editor
-- RegEdit
+- Registry Editor
 
 The full research and tools to assist in artifact recovery can be found at [https://github.com/ogmini/Notepad-State-Library](https://github.com/ogmini/Notepad-State-Library)
 
@@ -277,13 +277,7 @@ The settings files store application wide settings and defaults. The `settings.d
 
 [Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
-#### Behavior
-
-If a key doesn't exist that option hasn't been changed from the default or set. 
-
 #### File Format
-
-Last 8 bytes of each key are the FileTime. This appears in the value of the key.
 
 | Type | Hex | Description |
 |---|---|---|
@@ -292,9 +286,7 @@ Last 8 bytes of each key are the FileTime. This appears in the value of the key.
 |0x5f5e10b|`0B E1 F5 05` | byte (bool)
 |0x5f5e10c|`0C E1 F5 05` | string (NULL Terminated)
 
-
-SCREENSHOT HERE
-
+Last 8 bytes of the value for each key is the Timestamp for the setting change.
 
 | KeyName | Type | Notes |
 |---|---|---|
@@ -319,7 +311,22 @@ SCREENSHOT HERE
 |WindowPositionWidth|0x5f5e104|
 |WordWrap|0x5f5e10b| `00` Off / `01` On
 
+The image below shows the OpenFile Key which is an example of the 0x5f5e104 Type.   
+![010 Editor view of OpenFile Key](/Images/OpenFile.png)  
+The image below shows the TeachingTipVersion Key which is an example of the 0x5f5e105 Type.     
+![010 Editor view of TeachingTipVersion Key](/Images/TeachingTipVersion.png)  
+The image below shows the AutoCorrect Key which is an example of the 0x5f5e10b Type.   
+![010 Editor view of AutoCorrect Key](/Images/AutoCorrect.png)  
+The image below shows the FontFamil Key which is an example of the 0x5f5e10c Type.   
+![010 Editor view of FontFamily Key](/Images/FontFamily.png)  
+The image below shows application hive viewed using Registry Viewer. Take note of the Data column as the last 8 bytes are the Timestamp for that key.  
+![Registry Viewer of the application hive](/Images/RegistryViewer.png)  
+
 ## Reading and Understanding Artifacts
+
+#### Behavior of Settings
+
+If a key doesn't exist that option hasn't been changed from the default or set. 
 
 ## Preservation
 
