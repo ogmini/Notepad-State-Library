@@ -22,7 +22,7 @@ Windows Notepad is the default text editor included with standard installations 
 
 To accommodate these new functionalities, Windows Notepad must store this information. This paper will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, it will discuss preservation methods and the relevance of these artifacts to digital forensics.
 
-![Screenshot of Notepad](/images/Notepad.png)
+![Screenshot of Notepad](/Images/Notepad.png)
 
 https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-tool-and-notepad-for-windows-insiders/  
 https://blogs.windows.com/windows-insider/2023/01/19/tabs-in-notepad-begins-rolling-out-to-windows-insiders/  
@@ -94,8 +94,8 @@ Integrity of the file is validated with CRC32.
 |CRC32|4 bytes|CRC32 Check|
 |[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Will exist if any changes to the file are unsaved|Will not exist if all changes been saved to the file|
 
-![010 Editor view of *.bin for opened file with no changes](/images/Saved%20File%20-%20Read%20Only.png)  
-![010 Editor view of *.bin for opened file with unsaved changed](/images/Saved%20File%20-%20Changes.png)
+![010 Editor view of *.bin for opened file with no changes](/Images/Saved%20File%20-%20Read%20Only.png)  
+![010 Editor view of *.bin for opened file with unsaved changed](/Images/Saved%20File%20-%20Changes.png)
 
 
 #### No File Tab Format
