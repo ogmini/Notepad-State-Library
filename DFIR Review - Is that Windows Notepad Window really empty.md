@@ -52,6 +52,7 @@ The tabstate files store information about the open tabs and their contents in W
     - They have a TypeFlag of 1. 
 - _No File Tab_
     - These tabs have not been saved to disk and have not been opened from a file on disk. They only exist in the *.bin files. 
+    - These tabs can be in a New or Reopened condition.
     - They have a TypeFlag of 0.
 - _State File_
     - These are the *.0.bin and *.1.bin files and store extra information about the related matching GUID *.bin. 
@@ -94,13 +95,15 @@ Integrity of the file is validated with CRC32.
 |CRC32|4 bytes|CRC32 Check|
 |[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Will exist if any changes to the file are unsaved|Will not exist if all changes been saved to the file|
 
+The image below displays an example of a file with no changes that is in the Saved condition. Take note of the values for SavedFileContentLength, Timestamp, FileHash, ContentLength, and Unsaved. 
 ![010 Editor view of *.bin for opened file with no changes](/Images/Saved%20File%20-%20Read%20Only.png)  
+The image below displays an example of a file with unsaved changes that is in the Unsaved condition. Take note of the values for SavedFileContentLength, Timestamp, FileHash, ContentLength,  Content, Unsaved, and Unsaved Buffer Chunks.  
 ![010 Editor view of *.bin for opened file with unsaved changed](/Images/Saved%20File%20-%20Changes.png)
 
 
 #### No File Tab Format
-|Name|Type|Notes|
-|---|---|---|
+|Name|Type|Notes|New Condition|
+|---|---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Always 0|
 |TypeFlag|uLEB128|Equal to 0|
@@ -108,11 +111,19 @@ Integrity of the file is validated with CRC32.
 |SelectionStartIndex|uLEB128|Start position of text selection|
 |SelectionEndIndex|uLEB128|End position of text selection|
 |[Configuration Block](#configuration-block)|||
-|ContentLength|uLEB128|Length of the Content in bytes|
-|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|
-|Unsaved|1 byte|Unsaved flag|
+|ContentLength|uLEB128|Length of the Content in bytes|Will be 0|
+|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|Will not exist|
+|Unsaved|1 byte|Unsaved flag|Will be 0
 |CRC32|4 bytes|CRC32 Check|
-|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values may not exist|
+|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values will exist for changes until they are flushed to Content when Windows Notepad is closed||
+
+The image below displays an example of a newly created tab in the New condition with text changes. Take note of the values for ContentLength, Unsaved, and Unsaved Buffer Chunks.  
+![010 Editor view of *.bin for new tab](/Images//Unsaved%20File%20-%20New.png)  
+The image below displays an example of a tab in the Reopened condition with no text changes. Take note of the values for ContentLength, Content, Unsaved, and Unsaved Buffer Chunks.  
+![010 Editor view of *.bin for reopened tab](/Images/Unsaved%20File%20-%20Reopened.png)  
+The image below displays an example of a tab in the Reopened condition with text changes. Take note of the values for ContentLength, Content, Unsaved, and Unsaved Buffer Chunks.  
+![010 Editor view of *.bin for reopened tab](/Images/Unsaved%20File%20-%20Reopened%20with%20changes.png)
+
 
 #### State File Format
 |Name|Type|Notes|
