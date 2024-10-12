@@ -32,9 +32,9 @@ https://blogs.windows.com/windows-insider/2021/12/07/redesigned-notepad-for-wind
 
 There are three types of artifacts to be aware of when examining Windows Notepad that can found in different locations. 
 
-> - [Tabstate](#tabstate) - Stores information specific open tabs in Windows Notepad
-> - [Windowstate](#windowstate) - Stores information about the Windows Notepad window 
-> - [Settings](#settings) - Stores application wide settings  
+- [Tabstate](#tabstate) - Stores information specific open tabs in Windows Notepad
+- [Windowstate](#windowstate) - Stores information about the Windows Notepad window 
+- [Settings](#settings) - Stores application wide settings  
 
 ### Tabstate 
 
