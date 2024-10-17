@@ -24,6 +24,10 @@ Windows Notepad is the default text editor included with standard installations 
 To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, we will discuss the behavior and relevance of these artifacts to digital forensics.
 
 ![Screenshot of Notepad](/Images/Notepad.png)
+Seemingly empty Windows Notepad...
+
+![Recovered Text](/Images/SmokingGun.gif)
+Analysis results in the above recovered text as typed 
 
 https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-tool-and-notepad-for-windows-insiders/  
 https://blogs.windows.com/windows-insider/2023/01/19/tabs-in-notepad-begins-rolling-out-to-windows-insiders/  
@@ -318,5 +322,5 @@ As we have seen, properly preserving artifacts should continue to be a prime con
 
 Windows Notepad should not be overlooked as a potential source of evidence due to its ubiquity on Windows 11. It is an easy way for users to quickly save and type notes or have a scratch space that saves itself automatically. A potential criminal could be keeping a running list of victim names and locations in an unsaved tab in Windows Notepad. With the knowledge above, an investigator would know how to preserve and extract relevant artifacts from the file system. Possibly even being able to "replay" the changes and edits to the list.
 
-This research has resulted in the development of a tool to assist in artifact recovery to a human readable format. The application and documentation can be found at [https://github.com/ogmini/Notepad-State-Library](https://github.com/ogmini/Notepad-State-Library)
+This research and corresponding tools will continued to be updated as changes are made that impact the artifacts. The latest version can be found at [https://github.com/ogmini/Notepad-State-Library](https://github.com/ogmini/Notepad-State-Library)
 
