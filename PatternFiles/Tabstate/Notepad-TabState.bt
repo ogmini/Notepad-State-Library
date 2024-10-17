@@ -9,7 +9,7 @@
 // File Mask: *.bin 
 //  ID Bytes: 4E 50 //NP
 //   History: 
-//   0.2   2024-10-11 ogmini: Additions to TypeFlag enum, correction to AddedCharacters
+//   0.2   2024-10-12 ogmini: Additions to TypeFlag enum, correction to AddedCharacters and Content
 //   0.1   2024-10-09 ogmini: Initial version
 //------------------------------------------------
 
@@ -58,7 +58,10 @@ typedef struct {
 
 typedef struct {
     Uleb128  ContentLength;
-    wchar_t Content[DecodeUleb128(ContentLength)]  <bgcolor=cWhite>;
+    if (DecodeUleb128(ContentLength) > 0)
+    {
+        wchar_t Content[DecodeUleb128(ContentLength)]  <bgcolor=cWhite>;
+    }
     
 } ContentBuffer;
 
@@ -93,7 +96,10 @@ typedef struct {
     Uleb128 CursorPosition <bgcolor=cAqua>;
     Uleb128 DeletionAction <bgcolor=cLtAqua>;
     Uleb128 AdditionAction <bgcolor=cDkAqua>;
-    wchar_t AddedCharacters[DecodeUleb128(AdditionAction)] <bgcolor=cWhite>; 
+    if (DecodeUleb128(AdditionAction) > 0)
+    {
+        wchar_t AddedCharacters[DecodeUleb128(AdditionAction)] <bgcolor=cWhite>; 
+    }
     uint32 crc32 <bgcolor=cPurple, format=hex>;  
 } UnsavedBufferChunk;
 

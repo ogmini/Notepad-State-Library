@@ -42,7 +42,9 @@ The information below has been tested/validated on the following configurations:
 | Windows 11 23H2 OS Build 22635.3566 (Beta Release Branch) | 11.2402.22.0
 | Windows 11 23H2 OS Build 22631.3527 (Stable Release Branch) | 11.2402.22.0
 | Windows 11 23H2 OS Build 22631.3737 (Stable Release Branch) | 11.2404.10.0
-| Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch)| 11.2407.9.0
+| Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch) | 11.2407.9.0
+| Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch) | 11.2408.12.0
+
 
 ### Tabstate 
 
@@ -109,7 +111,7 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 |SelectionEndIndex|uLEB128|End position of text selection|
 |[Configuration Block](#configuration-block)|||
 |ContentLength|uLEB128|Length of the Content in bytes|
-|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|
+|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength. Will be blank if the file has only been opened and has no changes.|
 |Unsaved|1 byte|Unsaved flag|
 |CRC32|4 bytes|CRC32 Check|
 |[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values may not exist|
