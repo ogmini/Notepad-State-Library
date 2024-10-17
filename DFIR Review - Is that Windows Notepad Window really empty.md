@@ -10,6 +10,7 @@ What evidence can be lost if you open Windows Notepad?
 ### OS Version:  
 - Microsoft Windows 11 23H2 Build 22631 (Original Tests)
 - Microsoft Windows 11 23H2 Build 22635 (Original Tests)
+
 ### Tools:
 - ImHex
 - 010 Editor
@@ -35,6 +36,8 @@ There are three types of artifacts to be aware of when examining Windows Notepad
 - [Tabstate](#tabstate) - Stores information specific open tabs in Windows Notepad
 - [Windowstate](#windowstate) - Stores information about the Windows Notepad window 
 - [Settings](#settings) - Stores application wide settings  
+
+The information below is current as of Windows Notepad Version 11.2408.12.0
 
 ### Tabstate 
 
