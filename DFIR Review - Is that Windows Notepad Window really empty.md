@@ -27,7 +27,7 @@ To accommodate these new functionalities, Windows Notepad must store this inform
 Seemingly empty Windows Notepad...  
 
 ![Recovered Text](/Images/SmokingGun.gif)   
-Analysis results in the above recovered text as typed 
+Analysis results in the above recovered text (I have found the SMOKING GUN) as typed 
 
 https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-tool-and-notepad-for-windows-insiders/  
 https://blogs.windows.com/windows-insider/2023/01/19/tabs-in-notepad-begins-rolling-out-to-windows-insiders/  
