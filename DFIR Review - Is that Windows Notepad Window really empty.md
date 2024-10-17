@@ -20,7 +20,7 @@ The full research and tools to assist in artifact recovery can be found at [http
 ## Background
 Windows Notepad is the default text editor included with standard installations of Windows 11, with updates available through the Windows App Store. It is commonly used for quickly editing and reading text files, as well as for taking notes. Microsoft has begun enhancing its features, adding support for multiple tabs, saving session states, and multi-level undo.
 
-To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, we will discuss preservation and the relevance of these artifacts to digital forensics.
+To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, we will discuss the behavior and relevance of these artifacts to digital forensics.
 
 ![Screenshot of Notepad](/Images/Notepad.png)
 
@@ -56,7 +56,7 @@ The tabstate files store information about the open tabs and their contents in W
     - They have a TypeFlag of 0.
 - _State File_
     - These are the *.0.bin and *.1.bin files and store extra information about the related matching GUID *.bin. 
-    - These files do not always exist and this behavior will be expanded upon in the [Reading and Understanding Artifacts](#reading-and-understanding-artifacts) section. 
+    - These files do not always exist and this behavior will be expanded upon in the [Behavior](#behavior) section. 
     - They have a TypeFlag of 10 or 11.
 
 Integrity of the file is validated with CRC32. 
@@ -178,7 +178,7 @@ The image below shows the Unsaved Buffer Chunk for overwriting a block of text. 
 > Relevant Files
 > `*.0.bin` `*.1.bin`
 
-The windowstate files store information about opened windows of Windows Notepage and files are created for each opened window. Information is stored about:
+The windowstate files store information about opened windows of Windows Notepad and files are created for each opened window. Information is stored about:
 
 - Number of tabs
 - Order of tabs
@@ -224,21 +224,7 @@ There is a potential to recover complete or partial GUIDs from the slack space t
 > Relevant Files
 > `settings.dat`
 
-The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with RegEdit and other tools which can handle registry files. There is a Binary Template file for 010 Editor that I've updated. 
-
-#### Useful Links / Information
-
-[Application Hives](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/filtering-registry-operations-on-application-hives)
-
-[Windows Store App Settings](https://lunarfrog.com/blog/inspect-app-settings)
-
-[Manipulating Windows Store App Settings](https://www.damirscorner.com/blog/posts/20150117-ManipulatingSettingsDatFileWithSettingsFromWindowsStoreApps.html)
-
-[UWP App Data Storage](https://helgeklein.com/blog/uwp-universal-windows-app-data-storage-admins/)
-
-[REGF Format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
-
-[Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
+The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with Registry Editor and other tools which can handle registry files. I've also updated the [RegistryHive.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=RegistryHive.bt&type=0&sort=) for 010 Editor. If a key doesn't exist that option hasn't been changed from the default or set. 
 
 #### File Format
 
@@ -285,19 +271,35 @@ The image below shows the FontFamil Key which is an example of the 0x5f5e10c Typ
 The image below shows application hive viewed using Registry Viewer. Take note of the Data column as the last 8 bytes are the Timestamp for that key.  
 ![Registry Viewer of the application hive](/Images/RegistryViewer.png)  
 
-## Reading and Understanding Artifacts
+#### Useful Links / Information
+
+[Application Hives](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/filtering-registry-operations-on-application-hives)
+
+[Windows Store App Settings](https://lunarfrog.com/blog/inspect-app-settings)
+
+[Manipulating Windows Store App Settings](https://www.damirscorner.com/blog/posts/20150117-ManipulatingSettingsDatFileWithSettingsFromWindowsStoreApps.html)
+
+[UWP App Data Storage](https://helgeklein.com/blog/uwp-universal-windows-app-data-storage-admins/)
+
+[REGF Format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc)
+
+[Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
+
+## Behavior
 
 The presence of state files can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the state files are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The Sequence Number for the state files will never increment and the *.1.bin file will be empty.
 
-For a _File Tab_ or _No File Tab_ with unsaved changes, the state files are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The Sequence Number for the state files will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
+For a _File Tab_ or _No File Tab_ with unsaved changes, the state files are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The sequence number for the state files will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
 
 While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content.
 
-Opening a Tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32 in the Window State file. Any existing slack space in the file will get overwritten up to the end of the new CRC32. 
+Opening a Tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32 in the [Windowstate](#windowstate) file. Any existing slack space in the file will get overwritten up to the end of the new CRC32. 
 
 Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller.
 
-The following actions will cause an update of the sequence number and file:
+The sequence number is used to tell which *.0.bin or *.1.bin is active as updates alternate between the two. The file with the highest sequence number is the active one and are relevant to both State Files and [Windowstate](#windowstate) files. 
+
+The following actions will cause an update of the sequence number in the [Windowstate](#windowstate) files:
 - Resizing window
 - Moving window
 - Reordering/moving tabs
@@ -305,21 +307,13 @@ The following actions will cause an update of the sequence number and file:
     - Closing multiple tabs at once results in one action
 - Opening tab(s)
 
-Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new window state files. As you close each extra window, it will prompt you to save any files in that window and the corresponding window state file pair will be deleted. When the last window of Windows Notepad is closed, the final window state file pair will not be deleted. 
-
-Updates alternate between the *.0.bin and *.1.bin with the most up to date file having the greatest sequence number.
-
-Only the window state file for the last closed Windows Notepad is kept.
-
-Settings
-
-If a key doesn't exist that option hasn't been changed from the default or set. 
+Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new [Windowstate](#windowstate) files. As you close each extra window, it will prompt you to save any files in that window and the corresponding [Windowstate](#windowstate) files will be deleted. When the last window of Windows Notepad is closed, the final [Windowstate](#windowstate) files will not be deleted. Only the [Windowstate](#windowstate) files for the last closed Windows Notepad is kept.
 
 ## Conclusion
 
 As we have seen, properly preserving artifacts should continue to be a prime concern. Just the act of opening, closing, or interacting Windows Notepad will cause changes in the Tab State and Window State files. Closing Windows Notepad will cause the loss of any [Unsaved Buffer Chunks](#unsaved-buffer-chunk) which could have contained information such as a password typed by a user and later deleted. Opening Windows Notepad can result in the deletion of Tab State and Window State files related to files that no longer exist or are inaccessible. A user could have had a text file opened from a USB stick that has gone missing. Changing the active tab or moving the cursor will also result in changes.  
 
-Windows Notepad should not be overlooked as a potential source of evidence due to its ubiquity on Windows 11. It is an easy way for users to quickly save and type notes or have a scratch space that saves itself automatically.  
+Windows Notepad should not be overlooked as a potential source of evidence due to its ubiquity on Windows 11. It is an easy way for users to quickly save and type notes or have a scratch space that saves itself automatically. A potential criminal could be keeping a running list of victim names and locations in an unsaved tab in Windows Notepad. With the knowledge above, an investigator would know how to preserve and extract relevant artifacts from the file system. Possibly even being able to "replay" the changes and edits to the list.
 
 This research has resulted in the development of a tool to assist in artifact recovery to a human readable format. The application and documentation can be found at [https://github.com/ogmini/Notepad-State-Library](https://github.com/ogmini/Notepad-State-Library)
 
