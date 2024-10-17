@@ -3,6 +3,7 @@ using CsvHelper;
 using System.Globalization;
 using CommandLine;
 using WindowsNotepadParser;
+using System.IO.Compression;
 
 Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
@@ -55,6 +56,9 @@ Parser.Default.ParseArguments<Options>(args)
                 List<UnsavedBufferChunk> unsavedChunks = new List<UnsavedBufferChunk>();
 
                 //Tabstate
+                Console.WriteLine("Preserving TabState Folder - {0}", tabStateLocation);
+                ZipFile.CreateFromDirectory(tabStateLocation, Path.Combine(outputLocation, "TabStateFolder.zip"));
+
                 foreach (var path in Directory.EnumerateFiles(tabStateLocation, "*.bin"))
                 {
                     using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -134,6 +138,9 @@ Parser.Default.ParseArguments<Options>(args)
                 }
 
                 //Windowstate
+                Console.WriteLine("Preserving WindowState Folder - {0}", windowStateLocation);
+                ZipFile.CreateFromDirectory(windowStateLocation, Path.Combine(outputLocation, "WindowStateFolder.zip"));
+
                 foreach (var path in Directory.EnumerateFiles(windowStateLocation, "*.bin"))
                 {
                     using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
