@@ -23,10 +23,10 @@ Windows Notepad is the default text editor included with standard installations 
 
 To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, we will discuss the behavior and relevance of these artifacts to digital forensics.
 
-![Screenshot of Notepad](/Images/Notepad.png)
-Seemingly empty Windows Notepad...
+![Screenshot of Notepad](/Images/Notepad.png)   
+Seemingly empty Windows Notepad...  
 
-![Recovered Text](/Images/SmokingGun.gif)
+![Recovered Text](/Images/SmokingGun.gif)   
 Analysis results in the above recovered text as typed 
 
 https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-tool-and-notepad-for-windows-insiders/  
