@@ -287,29 +287,15 @@ The image below shows application hive viewed using Registry Viewer. Take note o
 
 ## Reading and Understanding Artifacts
 
-FILE TAB   
-Notepad is open with SavedFileNoChanges and SavedFileChanges. No state files. Closing Notepad while active tab = SavedFileNoChanges creates state files for the SavedFileNoChanges. Reopening Windows Notepad deletes the state files. Cycle Repeats.
+The presence of state files can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the state files are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The Sequence Number for the state files will never increment and the *.1.bin file will be empty.
 
-Closing Notepad while active tab = SavedFileChanges results in creating both state files. Reopening makes no changes. Closing makes no changes. 
+For a _File Tab_ or _No File Tab_ with unsaved changes, the state files are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The Sequence Number for the state files will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
 
-Changing the active tab to the SavedFileNoChanges deletes its state files
+While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content.
 
-Changing the active tab to the SavedFileChanges makes no changes
+Opening a Tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32 in the Window State file. Any existing slack space in the file will get overwritten up to the end of the new CRC32. 
 
-(Need to check if making any changes influences the above)
-
-NO FILE TAB   
-Notepad is open with New condition tab. No state files. Close Notepad, state files created. Reopen no change. Close notepad no change.
-
-If any changes are made to the content, the state files will be deleted. But will be recreated upon closing notepad with no changes.
-
-While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content. VERIFY THIS (It appears that unsaved buffer chunks for a File Tab that has unsaved changes will persist)
-
-#### Behavior
-
-Adding a tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32. Any existing slack space in the file will get overwritten up to the end of the new CRC32.
-
-Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller. More testing is required to validate this assumption.
+Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller.
 
 The following actions will cause an update of the sequence number and file:
 - Resizing window
@@ -325,13 +311,15 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 
 Only the window state file for the last closed Windows Notepad is kept.
 
-
-#### Behavior of Settings
+Settings
 
 If a key doesn't exist that option hasn't been changed from the default or set. 
 
-## Preservation
-
-## Relevance
-
 ## Conclusion
+
+As we have seen, properly preserving artifacts should continue to be a prime concern. Just the act of opening, closing, or interacting Windows Notepad will cause changes in the Tab State and Window State files. Closing Windows Notepad will cause the loss of any [Unsaved Buffer Chunks](#unsaved-buffer-chunk) which could have contained information such as a password typed by a user and later deleted. Opening Windows Notepad can result in the deletion of Tab State and Window State files related to files that no longer exist or are inaccessible. A user could have had a text file opened from a USB stick that has gone missing. Changing the active tab or moving the cursor will also result in changes.  
+
+Windows Notepad should not be overlooked as a potential source of evidence due to its ubiquity on Windows 11. It is an easy way for users to quickly save and type notes or have a scratch space that saves itself automatically.  
+
+This research has resulted in the development of a tool to assist in artifact recovery to a human readable format. The application and documentation can be found at [https://github.com/ogmini/Notepad-State-Library](https://github.com/ogmini/Notepad-State-Library)
+
