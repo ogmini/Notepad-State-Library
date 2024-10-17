@@ -57,7 +57,7 @@ Parser.Default.ParseArguments<Options>(args)
 
                 //Tabstate
                 Console.WriteLine("Preserving TabState Folder - {0}", tabStateLocation);
-                ZipFile.CreateFromDirectory(tabStateLocation, Path.Combine(outputLocation, "TabStateFolder.zip"));
+                CreateZipFromDirectory(tabStateLocation, Path.Combine(outputLocation, "TabStateFolder.zip"));
 
                 foreach (var path in Directory.EnumerateFiles(tabStateLocation, "*.bin"))
                 {
@@ -139,7 +139,7 @@ Parser.Default.ParseArguments<Options>(args)
 
                 //Windowstate
                 Console.WriteLine("Preserving WindowState Folder - {0}", windowStateLocation);
-                ZipFile.CreateFromDirectory(windowStateLocation, Path.Combine(outputLocation, "WindowStateFolder.zip"));
+                CreateZipFromDirectory(windowStateLocation, Path.Combine(outputLocation, "WindowStateFolder.zip"));
 
                 foreach (var path in Directory.EnumerateFiles(windowStateLocation, "*.bin"))
                 {
@@ -185,6 +185,25 @@ Parser.Default.ParseArguments<Options>(args)
                     }
                 }
             });
+
+void CreateZipFromDirectory(string sourceDirectoryName, string zipFilePath)
+{
+    using (FileStream zipToOpen = new FileStream(zipFilePath, FileMode.Create))
+    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+    {
+        foreach (var file in Directory.GetFiles(sourceDirectoryName))
+        {
+            var entryName = Path.GetFileName(file);
+            var entry = archive.CreateEntry(entryName);
+            entry.LastWriteTime = File.GetLastWriteTime(file);
+            using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var stream = entry.Open())
+            {
+                fs.CopyTo(stream);
+            }
+        }
+    }
+}
 
 public class Options
 {
