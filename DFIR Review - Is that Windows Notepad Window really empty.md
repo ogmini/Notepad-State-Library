@@ -21,14 +21,15 @@ The full research and tools to assist in artifact recovery can be found at [http
 ## Background
 Windows Notepad is the default text editor included with standard installations of Windows 11, with updates available through the Windows App Store. It is commonly used for quickly editing and reading text files, as well as for taking notes. Microsoft has begun enhancing its features, adding support for multiple tabs, saving session states, and multi-level undo.
 
-To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, we will discuss the behavior and relevance of these artifacts to digital forensics.
+To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, the behavior and relevance of these artifacts to digital forensics will be discussed.
 
+Seemingly empty Windows Notepad...    
 ![Screenshot of Notepad](/Images/Notepad.png)   
-Seemingly empty Windows Notepad...  
 
+Analysis results in the below recovered text (I have found the SMOKING GUN) as typed   
 ![Recovered Text](/Images/SmokingGun.gif)   
-Analysis results in the above recovered text (I have found the SMOKING GUN) as typed 
 
+https://blogs.windows.com/windows-insider/2024/03/21/spellcheck-in-notepad-begins-rolling-out-to-windows-insiders/  
 https://blogs.windows.com/windows-insider/2023/08/31/new-updates-for-snipping-tool-and-notepad-for-windows-insiders/  
 https://blogs.windows.com/windows-insider/2023/01/19/tabs-in-notepad-begins-rolling-out-to-windows-insiders/  
 https://blogs.windows.com/windows-insider/2021/12/07/redesigned-notepad-for-windows-11-begins-rolling-out-to-windows-insiders/
@@ -56,10 +57,14 @@ The tabstate files store information about the open tabs and their contents in W
 - _File Tab_
     - These tabs have been saved to disk or have been opened from a file on disk. 
     - These tabs can be in a Saved or Unsaved condition.
+        - Unsaved condition is visually denoted by a dot to the right of the Tab name.   
+        ![Dot](/Images/Unsaved%20Dot.png)
     - They have a TypeFlag of 1. 
 - _No File Tab_
     - These tabs have not been saved to disk and have not been opened from a file on disk. They only exist in the *.bin files. 
     - These tabs can be in a New or Reopened condition.
+        - Reopened condition is visually denoted by a dot to the right of the Tab name.   
+        ![Dot](/Images/Unsaved%20Dot.png)
     - They have a TypeFlag of 0.
 - _State File_
     - These are the *.0.bin and *.1.bin files and store extra information about the related matching GUID *.bin. 
@@ -169,11 +174,11 @@ The image below shows the RightToLeft and ShowUnicode options in the Right-Click
 |Added Characters|UTF-16LE (Variable Length)|Characters added with length determined from Addition Action|
 |CRC32|4 bytes|CRC32 Check of Unsaved Buffer Chunk|
 
-The image below shows the Unsaved Buffer Chunk for pasting a block of text. This is also similar to typing individual letters.  
+The image below shows the Unsaved Buffer Chunk for pasting a block of text signified by an Addition Action of 11 showing 11 characters have been added. This is also similar to typing individual letters where you would have an Addition Action of 1.  
 ![010 Editor view of Unsaved Buffer Chunk for pasting a block of text](/Images/Pasted%20Text%20Block.png)  
-The image below shows the Unsaved Buffer Chunk for deleting a block of text. This is also similar to deleting individual letters.  
+The image below shows the Unsaved Buffer Chunk for deleting a block of text signified by a Deletion Action of 11 showing 11 characters have been removed. This is also similar to deleting individual letters where you would have a Deletion Action of 1.
 ![010 Editor view of Unsaved Buffer Chunk for deleting a block of text](/Images/Deleted%20Text%20Block.png)  
-The image below shows the Unsaved Buffer Chunk for overwriting a block of text. This is also similar to inserting individual letters.  
+The image below shows the Unsaved Buffer Chunk for overwriting a block of text signified by both a Deletion and Addition Action. In this case, 4 characters were deleted and 7 were added. This is also similar to inserting individual letters where you would have a Deletion and Addition Action of 1.  
 ![010 Editor view of Unsaved Buffer Chunk for overwriting a block of text](/Images/Overwrite%20Text.png)  
 
 ### Windowstate 
@@ -315,6 +320,8 @@ The following actions will cause an update of the sequence number in the [Window
 - Opening tab(s)
 
 Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new [Windowstate](#windowstate) files. As you close each extra window, it will prompt you to save any files in that window and the corresponding [Windowstate](#windowstate) files will be deleted. When the last window of Windows Notepad is closed, the final [Windowstate](#windowstate) files will not be deleted. Only the [Windowstate](#windowstate) files for the last closed Windows Notepad is kept.
+
+## Scenarios
 
 ## Conclusion
 
