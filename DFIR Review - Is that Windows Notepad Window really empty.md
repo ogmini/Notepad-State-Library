@@ -153,8 +153,8 @@ The image below displays an example of the state file for a File Tab. Take note 
 |Version/MoreOptions|uLEB128|Number of More Options in bytes that follow|
 |[More Options Block](#more-options-block)|||
 
-The image below shows the WordWrap option in Windows Notepad. This setting is specific to the Tab.  
-![Windows Notepad Settings View](/Images/Settings.png)  
+The image below shows the WordWrap option in Windows Notepad. This setting is specific to the Tab. There is also a global setting for WordWrap in the settings menu.  
+![Windows Notepad Settings View](/Images/WordWrap-Tab.png)  
 The image below shows the RightToLeft and ShowUnicode options in the Right-Click menu for Windows Notepad. These settings are specific to the Tab.  
 ![Windows Notepad Settings View](/Images/RightClickOptions.png)  
 
