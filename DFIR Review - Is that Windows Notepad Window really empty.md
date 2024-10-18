@@ -236,7 +236,7 @@ There is a potential to recover complete or partial GUIDs from the slack space t
 > Relevant Files
 > `settings.dat`
 
-The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with Registry Editor and other tools which can handle registry files. I've also updated the [RegistryHive.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=RegistryHive.bt&type=0&sort=) for 010 Editor. If a key doesn't exist that option hasn't been changed from the default or set. 
+The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with Registry Editor and other tools which can handle registry files. I've also updated the [RegistryHive.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=RegistryHive.bt&type=0&sort=) for 010 Editor. If a key doesn't exist that option hasn't been changed from the default or set. Research has already been published on this file format and a list of links can be found [here](#useful-links--information)
 
 Below is a screenshot of the application wide settings menu.   
 ![Screenshot of Settings Menu](/Images/Settings.png)
@@ -250,7 +250,7 @@ Below is a screenshot of the application wide settings menu.
 |0x5f5e10b|`0B E1 F5 05` | byte (bool)
 |0x5f5e10c|`0C E1 F5 05` | string (NULL Terminated)
 
-Last 8 bytes of the value for each key is the Timestamp for the setting change.
+Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp for the setting change.
 
 | KeyName | Type | Notes |
 |---|---|---|
