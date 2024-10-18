@@ -73,6 +73,8 @@ The tabstate files store information about the open tabs and their contents in W
 
 Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes. 
 
+I've created a [Notepad-Tabstate.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-TabState.bt&type=0&sort=) for 010 Editor and a [Notepad-Tabstate.hexpat](/PatternFiles/Tabstate/Notepad-TabState.hexpat) for ImHex to assist in examining these files.
+
 #### File Tab Format
 |Name|Type|Notes|Saved Condition|
 |---|---|---|---|
@@ -199,6 +201,8 @@ The windowstate files store information about opened windows of Windows Notepad 
 - Window position
 
 Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes.
+
+I've created a [Notepad-WindowState.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-WindowState.bt&type=0&sort=) for 010 Editor and a [Notepad-WindowState.hexpat](/PatternFiles/Windowstate/Notepad-WindowState.hexpat) for ImHex to assist in examining these files.
 
 #### File Format
 |Name|Type|Notes|
