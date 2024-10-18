@@ -153,7 +153,7 @@ The image below displays an example of the state file for a File Tab. Take note 
 |Version/MoreOptions|uLEB128|Number of More Options in bytes that follow|
 |[More Options Block](#more-options-block)|||
 
-The image below shows the WordWrap option in Windows Notepad. This setting is specific to the Tab. There is also a global setting for WordWrap in the settings menu.  
+The image below shows the WordWrap option in Windows Notepad. This setting is specific to the Tab. There is also an application wide setting for WordWrap in the settings menu.  
 ![Windows Notepad Settings View](/Images/WordWrap-Tab.png)  
 The image below shows the RightToLeft and ShowUnicode options in the Right-Click menu for Windows Notepad. These settings are specific to the Tab.  
 ![Windows Notepad Settings View](/Images/RightClickOptions.png)  
@@ -238,6 +238,9 @@ There is a potential to recover complete or partial GUIDs from the slack space t
 
 The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with Registry Editor and other tools which can handle registry files. I've also updated the [RegistryHive.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=RegistryHive.bt&type=0&sort=) for 010 Editor. If a key doesn't exist that option hasn't been changed from the default or set. 
 
+Below is a screenshot of the application wide settings menu.   
+![Screenshot of Settings Menu](/Images/Settings.png)
+
 #### File Format
 
 | Type | Hex | Description |
@@ -251,26 +254,26 @@ Last 8 bytes of the value for each key is the Timestamp for the setting change.
 
 | KeyName | Type | Notes |
 |---|---|---|
-|AutoCorrect|0x5f5e10b| `00` Off / `01` On
+|AutoCorrect|0x5f5e10b| 0 = Off / 1 = On
 |FontFamily|0x5f5e10c| String
 |FontStyle|0x5f5e10c| String
-|GhostFile|0x5f5e10b| `00` Open in a new window / `01` Open content from a previous session
+|GhostFile|0x5f5e10b| 0 = Open in a new window / 1 = Open content from a previous session
 |LocalizedFontFamily|0x5f5e10c| String
 |LocalizedFontStyle|0x5f5e10c| String
-|OpenFile|0x5f5e104| `00` New Tab / `01` New Window
+|OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
 |SpellCheckState|0x5f5e10c| JSON: `{"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}`
-|StatusBarShown|0x5f5e10b| `00` Off / `01` On
+|StatusBarShown|0x5f5e10b| 0 = Off / 1  = On
 |TeachingTipCheckCount|0x5f5e105| Unknown
 |TeachingTipExplicitClose|0x5f5e10b| Unknown
 |TeachingTipVersion|0x5f5e105| Unknown
-|Theme|0x5f5e104| `00` System / `01` Light / `02` Dark
+|Theme|0x5f5e104| 0 = System / 1 = Light / 2 = Dark
 |WindowPositionBottom|0x5f5e104|
 |WindowPositionHeight|0x5f5e104|
 |WindowPositionLeft|0x5f5e104|
 |WindowPositionRight|0x5f5e104|
 |WindowPositionTop|0x5f5e104|
 |WindowPositionWidth|0x5f5e104|
-|WordWrap|0x5f5e10b| `00` Off / `01` On
+|WordWrap|0x5f5e10b| 0 = Off / 1 = On
 
 The image below shows the OpenFile Key which is an example of the 0x5f5e104 Type.   
 ![010 Editor view of OpenFile Key](/Images/OpenFile.png)  
