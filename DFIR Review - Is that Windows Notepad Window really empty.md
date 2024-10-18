@@ -198,7 +198,7 @@ The windowstate files store information about opened windows of Windows Notepad 
 - Window size
 - Window position
 
-Integrity of the file is validated with CRC32. 
+Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes.
 
 #### File Format
 |Name|Type|Notes|
