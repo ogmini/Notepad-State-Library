@@ -9,7 +9,7 @@ Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
             {
                 string tabStateLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
-                string windowStateLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState");
+                string windowStateLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState");       
                 string outputLocation = Directory.GetCurrentDirectory();
 
                 if (!string.IsNullOrWhiteSpace(options.tabStateLocation))
@@ -39,7 +39,6 @@ Parser.Default.ParseArguments<Options>(args)
                     Console.WriteLine("!! ERROR: Invalid WindowState Folder Location !!");
                     Environment.Exit(3);
                 }
-
                 Console.WriteLine("Output Folder Location - {0}", outputLocation);
                 if (!Directory.Exists(outputLocation))
                 {
@@ -56,7 +55,7 @@ Parser.Default.ParseArguments<Options>(args)
                 List<UnsavedBufferChunk> unsavedChunks = new List<UnsavedBufferChunk>();
 
                 //Tabstate
-                Console.WriteLine("Preserving TabState Folder - {0}", tabStateLocation);
+                Console.WriteLine("Copying TabState Folder - {0}", tabStateLocation);
                 CreateZipFromDirectory(tabStateLocation, Path.Combine(outputLocation, "TabStateFolder.zip"));
 
                 foreach (var path in Directory.EnumerateFiles(tabStateLocation, "*.bin"))
@@ -138,7 +137,7 @@ Parser.Default.ParseArguments<Options>(args)
                 }
 
                 //Windowstate
-                Console.WriteLine("Preserving WindowState Folder - {0}", windowStateLocation);
+                Console.WriteLine("Copying WindowState Folder - {0}", windowStateLocation);
                 CreateZipFromDirectory(windowStateLocation, Path.Combine(outputLocation, "WindowStateFolder.zip"));
 
                 foreach (var path in Directory.EnumerateFiles(windowStateLocation, "*.bin"))
