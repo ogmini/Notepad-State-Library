@@ -302,17 +302,17 @@ The image below shows application hive viewed using Registry Viewer. Take note o
 
 ## Behavior
 
-The presence of state files can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the state files are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The Sequence Number for the state files will never increment and the *.1.bin file will be empty.
+The sequence number is used to tell which *.0.bin or *.1.bin is active as updates alternate between the two. The file with the highest sequence number is the active one and are relevant to both _State Files_ and [Windowstate](#windowstate) files. 
 
-For a _File Tab_ or _No File Tab_ with unsaved changes, the state files are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The sequence number for the state files will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
+The presence of _State Files_ can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the _State Files_ are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The sequence number for the _State Files_ will never increment and the *.1.bin file will be empty.
+
+For a _File Tab_ or _No File Tab_ with unsaved changes, the _State Files_ are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The sequence number for the _State Files_ will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
 
 While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content.
 
 Opening a Tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32 in the [Windowstate](#windowstate) file. Any existing slack space in the file will get overwritten up to the end of the new CRC32. 
 
 Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller.
-
-The sequence number is used to tell which *.0.bin or *.1.bin is active as updates alternate between the two. The file with the highest sequence number is the active one and are relevant to both State Files and [Windowstate](#windowstate) files. 
 
 The following actions will cause an update of the sequence number in the [Windowstate](#windowstate) files:
 - Resizing window
