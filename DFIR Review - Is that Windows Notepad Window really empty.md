@@ -71,7 +71,7 @@ The tabstate files store information about the open tabs and their contents in W
     - These files do not always exist and this behavior will be expanded upon in the [Behavior](#behavior) section. 
     - They have a TypeFlag of 10 or 11.
 
-Integrity of the file is validated with CRC32. 
+Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes. 
 
 #### File Tab Format
 |Name|Type|Notes|Saved Condition|
