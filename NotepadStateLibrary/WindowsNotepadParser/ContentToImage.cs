@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System.Text;
 
 
 
@@ -13,23 +14,24 @@ namespace WindowsNotepadParser
 {
     internal class ContentToImage
     {
-        public ContentToImage(string origContent, List<UnsavedBufferChunk> chunks, string outputFilename, int frameDelay = 100, string font = "Arial", int widthModifier = 18, int heightModifier = 24, int fontSize = 36)
+        public ContentToImage(byte[] origContent, List<UnsavedBufferChunk> chunks, string outputFilename, int frameDelay = 100, string font = "Arial", int widthModifier = 24, int heightModifier = 36, int fontSize = 36)
         {
-            var charArray = origContent.ToList();
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Encoding.Unicode.GetString(origContent));
             List<string> contents = new List<string>();
-            contents.Add(origContent);
+            contents.Add(sb.ToString());
+
             foreach (var c in chunks)
             {
                 if (c.DeletionAction > 0)
                 {
-                    charArray.RemoveRange((int)c.CursorPosition, (int)c.DeletionAction);
+                    sb.Remove((int)c.CursorPosition, (int)c.DeletionAction);
                 }
                 if (c.AdditionAction > 0)
                 {
-                    charArray.InsertRange((int)c.CursorPosition, c.CharactersAddedString);
+                    sb.Insert((int)c.CursorPosition, Encoding.Unicode.GetString(c.CharactersAdded));
                 }
-
-                contents.Add(String.Join("", charArray));
+                contents.Add(sb.ToString());
             }
 
             int longest = 0;
@@ -49,12 +51,15 @@ namespace WindowsNotepadParser
 
             //TODO: 18 and 24 are hardcoded. Can we figure this out from the Font and Fontsize?
             int width = longest * widthModifier; 
-            int height = lines * heightModifier; 
+            int height = lines * heightModifier;
+
+            //width = 800;
+            //height = 800;
 
             //Initial Image/Content            
             using Image img = new Image<Rgba32>(width, height, Color.White);
             img.Mutate(ctx => ctx
-                .DrawText(origContent, new Font(SystemFonts.Get(font), fontSize), Color.Black, new PointF(0, 0)));
+                .DrawText(Encoding.Unicode.GetString(origContent).ReplaceLineEndings(), new Font(SystemFonts.Get(font), fontSize), Color.Black, new PointF(0, 0)));
 
             var gifMetadata = img.Metadata.GetGifMetadata();
             gifMetadata.RepeatCount = 0;
@@ -77,7 +82,6 @@ namespace WindowsNotepadParser
 
             img.SaveAsGif(outputFilename);
         }
-
         static (int, int) FindLongestLine(string input)
         {
             var lines = input.Split(new[] { '\r', '\n' });

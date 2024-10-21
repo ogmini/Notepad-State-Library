@@ -91,13 +91,14 @@ Parser.Default.ParseArguments<Options>(args)
                                 {
                                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                                     {
+
                                         csv.WriteHeader<UnsavedBufferChunk>();
                                         csv.NextRecord();
                                         csv.WriteRecords(np.UnsavedBufferChunks);
                                     }
                                 }
 
-                                ContentToImage ci = new ContentToImage(np.ContentString, np.UnsavedBufferChunks,string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
+                                ContentToImage ci = new ContentToImage(np.Content, np.UnsavedBufferChunks,string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
                             }
                         }
                     }
