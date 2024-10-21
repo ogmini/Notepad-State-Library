@@ -334,13 +334,27 @@ For illustrative purposes, two scenarios are presented below to highlight what c
 
 ![Commandline](/Images/Scenario%20-%20Collect.gif)  
 
- [Unsaved Buffer Chunks](#unsaved-buffer-chunk) have been detected and the tool was able to recreate the changes over time in a viewable GIF. The user's recovery keys were pasted into Windows Notepad and later deleted leaving only the reminder visible.  
+[Unsaved Buffer Chunks](#unsaved-buffer-chunk) have been detected and the tool was able to recreate the changes over time in a viewable GIF. The user's recovery keys were pasted into Windows Notepad and later deleted leaving only the reminder visible.  
 
 ![Reconstructed](/Images/Scenario%20-%20Reconstructed.gif)  
 
-The above generated GIF matches the recorded actions.
-
+The above generated GIF matches the GIF below of the recorded actions performed by the user.
 ![Actual Actions](/Images/Scenario%20-%20Original.gif)
+
+In the second scenario, we've come across a text file on the desktop called "Secret Note.txt". Knowing that possible artifacts could be altered if Windows Notepad was to be opened, you run some analysis using Windows Notepad Parser to gather and parse them into a human readable format. 
+
+Unsaved content has been found in the [Tabstate](#tabstate) file reminding the user to pickup a pickaxe and dynamite for tonight. By comparing this unsaved content to the saved text file it is evident that this reminder was added to the original text stating that the gold is hidden behind a fake brick in the chimney. 
+
+Screenshot of recovered unsaved content viewed with Timeline Explorer.   
+![Unsaved](/Images/Scenario%20-%20Unsaved.png)  
+
+Screenshot of original text file viewed with 010 Editor.   
+![Saved](/Images/Scenario%20-%20Saved.png)  
+
+GIF of the actions performed by the user. We can see the user adding text and not saving the changes. 
+![Actions](/Images/Scenario%20-%20Changes.gif)  
+
+
 
 
 ## Conclusion
