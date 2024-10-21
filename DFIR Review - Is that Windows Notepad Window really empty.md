@@ -338,6 +338,10 @@ For illustrative purposes, two scenarios are presented below to highlight what c
 
 ![Reconstructed](/Images/Scenario%20-%20Reconstructed.gif)  
 
+The above generated GIF matches the recorded actions.
+
+![Actual Actions](/Images/Scenario%20-%20Original.gif)
+
 
 ## Conclusion
 
