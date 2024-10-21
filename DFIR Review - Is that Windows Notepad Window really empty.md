@@ -330,6 +330,15 @@ Creating a new Windows Notepad window by dragging a tab outside of the original 
 
 ## Scenarios
 
+For illustrative purposes, two scenarios are presented below to highlight what can be recovered along with the importance of proper preservation. In our first scenario, you have come across a computer with Windows Notepad open on the desktop showing a reminder to pickup milk and eggs. Knowing that Windows Notepad could be hiding artifacts important to your investigation, you run some analysis using Windows Notepad Parser to gather and parse them into a human readable format. 
+
+![Commandline](/Images/Scenario%20-%20Collect.gif)  
+
+ [Unsaved Buffer Chunks](#unsaved-buffer-chunk) have been detected and the tool was able to recreate the changes over time in a viewable GIF. The user's recovery keys were pasted into Windows Notepad and later deleted leaving only the reminder visible.  
+
+![Reconstructed](/Images/Scenario%20-%20Reconstructed.gif)  
+
+
 ## Conclusion
 
 As we have seen, properly preserving artifacts should continue to be a prime concern. Just the act of opening, closing, or interacting Windows Notepad will cause changes in the [Tabstate](#tabstate) and [Windowstate](#windowstate) files. Closing Windows Notepad will cause the loss of any [Unsaved Buffer Chunks](#unsaved-buffer-chunk) which could have contained information such as a password typed by a user and later deleted. Opening Windows Notepad can result in the deletion of [Tabstate](#tabstate) and [Windowstate](#windowstate) files related to files that no longer exist or are inaccessible. A user could have had a text file opened from a USB stick that has gone missing. Changing the active tab or moving the cursor will also result in changes.  
