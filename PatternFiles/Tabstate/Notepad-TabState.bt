@@ -3,13 +3,13 @@
 //
 //      File: Notepad-TabState.bt
 //   Authors: ogmini (https://github.com/ogmini), NordGaren (https://github.com/nordgaren/)
-//   Version: 0.1
+//   Version: 0.2
 //   Purpose: Template to make sense of the Tab State file for Windows 11 Notepad
 //  Category: Misc
 // File Mask: *.bin 
 //  ID Bytes: 4E 50 //NP
 //   History: 
-//   0.2   2024-10-12 ogmini: Additions to TypeFlag enum, correction to AddedCharacters and Content
+//   0.2   2024-10-12 ogmini: Additions to TypeFlag enum, correction to AddedCharacters and Content, correction to Uleb128 to string
 //   0.1   2024-10-09 ogmini: Initial version
 //------------------------------------------------
 
@@ -119,7 +119,7 @@ uint64 DecodeUleb128(Uleb128 &varint) {
 }
 
 string Uleb128ValueToStr(Uleb128 &varint) {
-    return Str("%u", DecodeUleb128(varint));
+    return Str("%Lu", DecodeUleb128(varint));
 }
 
 //------------------------------------------------
