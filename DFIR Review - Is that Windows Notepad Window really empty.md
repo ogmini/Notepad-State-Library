@@ -306,6 +306,10 @@ The image below shows application hive viewed using Registry Viewer. Take note o
 
 ## Behavior
 
+Timestamp for the _File Tab_ for [Tabstate](#tabstate) files will be set to 0 when the file is saved to disk. It will have a valid value when the first change is made to the contents of the file. Any successive changes before saving the file will not result in the Timestamp being updated. This behavior persists over opening/closing Windows Notepad. In short, the Timestamp for the _File Tab_ indicates when changes were started to be made on the file and that they have not yet been saved to disk.
+
+The timestamps associated with each key in the application hive show us when those [Settings](#settings) were last changed. 
+
 The sequence number is used to tell which *.0.bin or *.1.bin is active as updates alternate between the two. The file with the highest sequence number is the active one and are relevant to both _State Files_ and [Windowstate](#windowstate) files. 
 
 The presence of _State Files_ can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the _State Files_ are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The sequence number for the _State Files_ will never increment and the *.1.bin file will be empty.
@@ -353,9 +357,6 @@ Screenshot of original text file viewed with 010 Editor.
 
 GIF of the actions performed by the user. We can see the user adding text and not saving the changes. 
 ![Actions](/Images/Scenario%20-%20Changes.gif)  
-
-
-
 
 ## Conclusion
 
