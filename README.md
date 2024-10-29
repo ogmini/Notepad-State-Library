@@ -58,19 +58,24 @@ The information below has been tested/validated on the following configurations:
 The tabstate files store information about the open tabs and their contents in Windows Notepad. The filenames are GUIDs and there are three types of *.bin files:
 - _File Tab_
 	- These tabs have been saved to disk or have been opened from a file on disk. 
+	- These tabs can be in a Saved or Unsaved condition.
+		- Unsaved condition is visually denoted by a dot to the right of the Tab name.   
+		![Dot](/Images/Unsaved%20Dot.png)
 	- They have a TypeFlag of 1. 
 - _No File Tab_
 	- These tabs have not been saved to disk and have not been opened from a file on disk. They only exist in the *.bin files. 
+	- These tabs can be in a New or Reopened condition.
+		- Reopened condition is visually denoted by a dot to the right of the Tab name.   
+		![Dot](/Images/Unsaved%20Dot.png)
 	- They have a TypeFlag of 0.
 - _State File_
 	- These are the *.0.bin and *.1.bin files and store extra information about the related matching GUID *.bin. 
-	- They have a TypeFlag greater than 1.
+	- These files do not always exist and this behavior will be expanded upon in the [Behavior](#behavior) section. 
+	- They have a TypeFlag of 10 or 11.
 
-Both the _File Tab_ and _No File Tab_ can have related _State Files_. 
+Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes. 
 
-While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content. 
-
-Integrity of the file is validated with CRC32. 
+I've created a [Notepad-Tabstate.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-TabState.bt&type=0&sort=) for 010 Editor and a [Notepad-Tabstate.hexpat](/PatternFiles/Tabstate/Notepad-TabState.hexpat) for ImHex to assist in examining these files.
 
 #### Behavior
 
@@ -94,31 +99,31 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 #### File Format
 
 ##### File Tab
-|Name|Type|Notes|
-|---|---|---|
+|Name|Type|Notes|Saved Condition|
+|---|---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Always 0|
 |TypeFlag|uLEB128|Equal to 1|
 |FilePathLength|uLEB128|Length of the FilePath in bytes|
 |FilePath|UTF-16LE (Variable Length)|FilePath string with length determined from FilePathLength|
-|SavedFileContentLength|uLEB128|Size in bytes of the text file saved on disk|
+|SavedFileContentLength|uLEB128|Size in bytes of the text file saved on disk|Will be 0 if all changes have been saved to the file|
 |EncodingType|1 byte|1 = ANSI / 2 = UTF16LE / 3 = UTF16BE / 4 = UTF8BOM / 5 = UTF8|
 |CarriageReturnType|1 byte|1 = Windows CRLF / 2 = Macintosh CR / 3 = Unix LF|
-|Timestamp|uLEB128|18-digit Win32 FILETIME [https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime) / [https://www.epochconverter.com/ldap](https://www.epochconverter.com/ldap)|
-|FileHash|32 bytes|SHA256 Hash of the text file saved on disk|
+|Timestamp|uLEB128|18-digit Win32 FILETIME|Will be 0 if all changes have been saved to the file|
+|FileHash|32 bytes|SHA256 Hash of the text file saved on disk|Will be 0 if all changes have been saved to the file|
 |:question:Unknown|2 bytes|[0x00, 0x01]|
 |SelectionStartIndex|uLEB128|Start position of text selection|
 |SelectionEndIndex|uLEB128|End position of text selection|
 |[Configuration Block](#configuration-block)|||
-|ContentLength|uLEB128|Length of the Content in bytes|
-|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength. Will be blank if the file has only been opened and has no changes.|
-|Unsaved|1 byte|Unsaved flag|
+|ContentLength|uLEB128|Length of the Content in bytes|Will be 0 if all changes have been saved to the file|
+|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|Will not exist if all changes have been saved to the file|
+|Unsaved|1 byte|Unsaved flag|Will be 0 since the file has been saved|
 |CRC32|4 bytes|CRC32 Check|
-|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values may not exist|
+|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Will exist if any changes to the file are unsaved|Will not exist if all changes been saved to the file|
 
 ##### No File Tab
-|Name|Type|Notes|
-|---|---|---|
+|Name|Type|Notes|New Condition|
+|---|---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Always 0|
 |TypeFlag|uLEB128|Equal to 0|
@@ -126,18 +131,18 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 |SelectionStartIndex|uLEB128|Start position of text selection|
 |SelectionEndIndex|uLEB128|End position of text selection|
 |[Configuration Block](#configuration-block)|||
-|ContentLength|uLEB128|Length of the Content in bytes|
-|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|
-|Unsaved|1 byte|Unsaved flag|
+|ContentLength|uLEB128|Length of the Content in bytes|Will be 0|
+|Content|UTF-16LE (Variable Length)|Text Content with length determined from ContentLength|Will not exist|
+|Unsaved|1 byte|Unsaved flag|Will be 0
 |CRC32|4 bytes|CRC32 Check|
-|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values may not exist|
+|[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values will exist for changes until they are flushed to Content when Windows Notepad is closed||
 
 ##### State File
 |Name|Type|Notes|
 |---|---|---|
 |Signature / Magic Bytes|2 bytes|[0x4E, 0x50] "NP"|
 |Sequence Number|uLEB128|Increments and highest number signifies the active state file|
-|TypeFlag|uLEB128|Greater than 1|
+|TypeFlag|uLEB128|10 = No File Tab State / 11 = File Tab State|
 |:question:Unknown|1 byte|[0x00]|
 |BinSize|uLEB128|Size in bytes of the associated *.bin file| 
 |SelectionStartIndex|uLEB128|Start position of text selection|
@@ -161,7 +166,6 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 |:question:Unknown| 1 byte|Spellcheck/Autocorrect? Do not seem to be flags. These were added to the file format when Spellcheck/Autocorrect feature was added|
 
 ###### Unsaved Buffer Chunk
-
 |Name|Type|Notes|
 |---|---|---|
 |Cursor Position|uLEB128|Cursor Position of where Deletion/Addition/Insertion begins. Insertion is signified by both a Deletion Action and Addition Action|
@@ -179,7 +183,17 @@ If you drag/drop multiple files into Windows Notepad, the internal content of th
 > Relevant Files
 > `*.0.bin` `*.1.bin`
 
-The windowstate files store information about the list of tabs, order of tabs, and active tab for Windows Notepad. Tabs are stored as GUIDs which refer back to the filename of the matching tabstate file. They also store the coordinates and size of the Windows Notepad window. Integrity of the file is validated with CRC32. 
+The windowstate files store information about opened windows of Windows Notepad and files are created for each opened window. Information is stored about:
+
+- Number of tabs
+- Order of tabs
+- Active tab
+- Window size
+- Window position
+
+Integrity of the file is validated with CRC32 calculated and stored for the preceding bytes.
+
+I've created a [Notepad-WindowState.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-WindowState.bt&type=0&sort=) for 010 Editor and a [Notepad-WindowState.hexpat](/PatternFiles/Windowstate/Notepad-WindowState.hexpat) for ImHex to assist in examining these files.
 
 #### Behavior
 
@@ -207,7 +221,7 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 |BytesToCRC|uLEB128|Number of bytes to the CRC Check|
 |:question:Unknown|1 byte|[0x00]|
 |NumberTabs|uLEB128|Number of Tabs in Notepad|
-|GUID Chunks|16 bytes (Variable Number of Chunks)|GUID for each Tab in view order that refer to the filename of the matching [Tabstate](#tabstate) file|
+|GUID Chunks|16 bytes (Variable Number of Chunks)|GUID for each tab in view order that refer to the filename of the matching [Tabstate](#tabstate) file|
 |ActiveTab|uLEB128|Number of Active Tab in Notepad. 0 based index.|
 |TopLeftCoords_X|uINT32||
 |TopLeftCoords_Y|uINT32||
@@ -222,7 +236,7 @@ Updates alternate between the *.0.bin and *.1.bin with the most up to date file 
 #### Slack Space
 It appears that the windowstate files will never reduce in size. More testing is required to validate this or to discover what actions will cause them to be deleted or cleared out.
 
-There is a potential to recover complete or partial GUIDs from the slack space that can be tied back to past tabstate files. These deleted tabstate files could possibly be recovered and examined.  
+There is a potential to recover complete or partial GUIDs from the slack space that can be tied back to past [Tabstate](#tabstate) files. These deleted files could possibly be recovered and examined. As Tabs are opened and closed, the slack space will get more and more convoluted and disarrayed as records are overwritten as the GUID Chunks section changes in size. Manual parsing is suggested and there is no guarantee of being able to recover anything of use.   
 
 ##### Approaches
 
@@ -239,7 +253,7 @@ WIP
 > Relevant Files
 > `settings.dat`
 
-The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with RegEdit and other tools which can handle registry files. There is a Binary Template file for 010 Editor that I've updated. 
+The settings files store application wide settings and defaults. The `settings.dat` file is an application hive which can be opened with Registry Editor and other tools which can handle registry files. I've also updated the [RegistryHive.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=RegistryHive.bt&type=0&sort=) for 010 Editor. If a key doesn't exist that option hasn't been changed from the default or set. Research has already been published on this file format and a list of links can be found [here](#useful-links--information)
 
 #### Useful Links / Information
 
@@ -260,9 +274,6 @@ The settings files store application wide settings and defaults. The `settings.d
 If a key doesn't exist that option hasn't been changed from the default or set. 
 
 #### File Format
-
-Last 8 bytes of each key are the FileTime. This appears in the value of the key.
-
 | Type | Hex | Description |
 |---|---|---|
 |0x5f5e104|`04 E1 F5 05` | uINT32
@@ -270,32 +281,30 @@ Last 8 bytes of each key are the FileTime. This appears in the value of the key.
 |0x5f5e10b|`0B E1 F5 05` | byte (bool)
 |0x5f5e10c|`0C E1 F5 05` | string (NULL Terminated)
 
-
-SCREENSHOT HERE
-
+Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp for the setting change.
 
 | KeyName | Type | Notes |
 |---|---|---|
-|AutoCorrect|0x5f5e10b| `00` Off / `01` On
+|AutoCorrect|0x5f5e10b| 0 = Off / 1 = On
 |FontFamily|0x5f5e10c| String
 |FontStyle|0x5f5e10c| String
-|GhostFile|0x5f5e10b| `00` Open in a new window / `01` Open content from a previous session
+|GhostFile|0x5f5e10b| 0 = Open in a new window / 1 = Open content from a previous session
 |LocalizedFontFamily|0x5f5e10c| String
 |LocalizedFontStyle|0x5f5e10c| String
-|OpenFile|0x5f5e104| `00` New Tab / `01` New Window
+|OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
 |SpellCheckState|0x5f5e10c| JSON: `{"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}`
-|StatusBarShown|0x5f5e10b| `00` Off / `01` On
+|StatusBarShown|0x5f5e10b| 0 = Off / 1  = On
 |TeachingTipCheckCount|0x5f5e105| Unknown
 |TeachingTipExplicitClose|0x5f5e10b| Unknown
 |TeachingTipVersion|0x5f5e105| Unknown
-|Theme|0x5f5e104| `00` System / `01` Light / `02` Dark
+|Theme|0x5f5e104| 0 = System / 1 = Light / 2 = Dark
 |WindowPositionBottom|0x5f5e104|
 |WindowPositionHeight|0x5f5e104|
 |WindowPositionLeft|0x5f5e104|
 |WindowPositionRight|0x5f5e104|
 |WindowPositionTop|0x5f5e104|
 |WindowPositionWidth|0x5f5e104|
-|WordWrap|0x5f5e10b| `00` Off / `01` On
+|WordWrap|0x5f5e10b| 0 = Off / 1 = On
 
 ## Acknowledgements
 
