@@ -21,7 +21,7 @@ The full research and tools to assist in artifact recovery can be found at [http
 ## Background
 Windows Notepad is the default text editor included with standard installations of Windows 11, with updates available through the Windows App Store. It is commonly used for quickly editing and reading text files, as well as for taking notes. Microsoft has begun enhancing its features, adding support for multiple tabs, saving session states, and multi-level undo.
 
-To accommodate these new functionalities, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, the behavior and relevance of these artifacts to digital forensics will be discussed.
+To accommodate these new functions, Windows Notepad must store this information. We will explore the artifacts that can be recovered from the local filesystem, identify their locations, and explain how to read and understand them. Additionally, the behavior and relevance of these artifacts to digital forensics will be discussed.
 
 Seemingly empty Windows Notepad...    
 ![Screenshot of Notepad](/Images/Notepad.png)   
