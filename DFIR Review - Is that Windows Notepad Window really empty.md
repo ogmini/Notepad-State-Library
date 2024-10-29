@@ -98,9 +98,9 @@ I've created a [Notepad-Tabstate.bt](https://www.sweetscape.com/010editor/reposi
 |CRC32|4 bytes|CRC32 Check|
 |[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Will exist if any changes to the file are unsaved|Will not exist if all changes been saved to the file|
 
-The image below displays an example of a file with no changes that is in the Saved condition. Take note of the values for SavedFileContentLength, Timestamp, FileHash, ContentLength, and Unsaved. 
+The image below displays an example of a file with no changes that is in the Saved condition.  
 ![010 Editor view of *.bin for opened file with no changes](/Images/Saved%20File%20-%20Read%20Only.png)  
-The image below displays an example of a file with unsaved changes that is in the Unsaved condition. Take note of the values for SavedFileContentLength, Timestamp, FileHash, ContentLength,  Content, Unsaved, and Unsaved Buffer Chunks.  
+The image below displays an example of a file with unsaved changes that is in the Unsaved condition. 
 ![010 Editor view of *.bin for opened file with unsaved changed](/Images/Saved%20File%20-%20Changes.png)
 
 
@@ -120,11 +120,11 @@ The image below displays an example of a file with unsaved changes that is in th
 |CRC32|4 bytes|CRC32 Check|
 |[Unsaved Buffer Chunks](#unsaved-buffer-chunk)||Values will exist for changes until they are flushed to Content when Windows Notepad is closed||
 
-The image below displays an example of a newly created tab in the New condition with text changes. Take note of the values for ContentLength, Unsaved, and Unsaved Buffer Chunks.  
+The image below displays an example of a newly created tab in the New condition with text changes.   
 ![010 Editor view of *.bin for new tab](/Images//Unsaved%20File%20-%20New.png)  
-The image below displays an example of a tab in the Reopened condition with no text changes. Take note of the values for ContentLength, Content, Unsaved, and Unsaved Buffer Chunks.  
+The image below displays an example of a tab in the Reopened condition with no text changes.     
 ![010 Editor view of *.bin for reopened tab](/Images/Unsaved%20File%20-%20Reopened.png)  
-The image below displays an example of a tab in the Reopened condition with text changes. Take note of the values for ContentLength, Content, Unsaved, and Unsaved Buffer Chunks.  
+The image below displays an example of a tab in the Reopened condition with text changes.     
 ![010 Editor view of *.bin for reopened tab](/Images/Unsaved%20File%20-%20Reopened%20with%20changes.png)
 
 
