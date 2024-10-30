@@ -77,25 +77,6 @@ Integrity of the file is validated with CRC32 calculated and stored for the prec
 
 I've created a [Notepad-Tabstate.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-TabState.bt&type=0&sort=) for 010 Editor and a [Notepad-Tabstate.hexpat](/PatternFiles/Tabstate/Notepad-TabState.hexpat) for ImHex to assist in examining these files.
 
-#### Behavior
-
-Opening Windows Notepad with no currently existing tab(s) will create an empty "Untitled" tab and an associated _No File Tab_ bin file.
-
-Creating new tab(s) will create associated _No File Tab_ bin file(s).
-
-Opening file(s) from disk will create associated _File Tab_ bin file(s).
-
-Closing tab(s) will delete the associated bin file(s). 
-
-TODO: Reasons State Files are created/deleted.
-
-The existence of no bin file(s) indicates:
-- Windows Notepad has never been opened
-- All tabs have been manually closed
-- Manual deletion
-
-If you drag/drop multiple files into Windows Notepad, the internal content of the bin file(s) will not load until the tab becomes active. (To be expanded upon)
-
 #### File Format
 
 ##### File Tab
@@ -195,24 +176,6 @@ Integrity of the file is validated with CRC32 calculated and stored for the prec
 
 I've created a [Notepad-WindowState.bt](https://www.sweetscape.com/010editor/repository/templates/file_info.php?file=Notepad-WindowState.bt&type=0&sort=) for 010 Editor and a [Notepad-WindowState.hexpat](/PatternFiles/Windowstate/Notepad-WindowState.hexpat) for ImHex to assist in examining these files.
 
-#### Behavior
-
-Adding a tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32. Any existing slack space in the file will get overwritten up to the end of the new CRC32.
-
-Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller. More testing is required to validate this assumption.
-
-The following actions will cause an update of the sequence number and file:
-- Resizing window
-- Moving window
-- Reordering/moving tabs
-- Closing tab(s)
-	- Closing multiple tabs at once results in one action
-- Opening tab(s)
-
-Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new window state files. As you close each extra window, it will prompt you to save any files in that window and the corresponding window state file pair will be deleted. When the last window of Windows Notepad is closed, the final window state file pair will not be deleted. 
-
-Updates alternate between the *.0.bin and *.1.bin with the most up to date file having the greatest sequence number.
-
 #### File Format
 |Name|Type|Notes|
 |---|---|---|
@@ -269,10 +232,6 @@ The settings files store application wide settings and defaults. The `settings.d
 
 [Registry Format](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 
-#### Behavior
-
-If a key doesn't exist that option hasn't been changed from the default or set. 
-
 #### File Format
 | Type | Hex | Description |
 |---|---|---|
@@ -305,6 +264,34 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |WindowPositionTop|0x5f5e104|
 |WindowPositionWidth|0x5f5e104|
 |WordWrap|0x5f5e10b| 0 = Off / 1 = On
+
+### Behavior
+
+Timestamp for the _File Tab_ for [Tabstate](#tabstate) files will be set to 0 when the file is saved to disk. It will have a valid value when the first change is made to the contents of the file. Any successive changes before saving the file will not result in the Timestamp being updated. This behavior persists over opening/closing Windows Notepad. In short, the Timestamp for the _File Tab_ indicates when changes were started to be made on the file and that they have not yet been saved to disk.
+
+The timestamps associated with each key in the application hive show us when those [Settings](#settings) were last changed. 
+
+The sequence number is used to tell which *.0.bin or *.1.bin is active as updates alternate between the two. The file with the highest sequence number is the active one and are relevant to both _State Files_ and [Windowstate](#windowstate) files. 
+
+The presence of _State Files_ can tell us a bit about the usage pattern of Windows Notepad. For a _File Tab_ with no changes, the _State Files_ are only created when Windows Notepad is closed. They are subsequently deleted when the _File Tab_ is made active. The sequence number for the _State Files_ will never increment and the *.1.bin file will be empty.
+
+For a _File Tab_ or _No File Tab_ with unsaved changes, the _State Files_ are only created when Windows Notepad is closed and no [Unsaved Buffer Chunks](#unsaved-buffer-chunk) were flushed. They are subsequently deleted when new changes are made or the file has been saved. The sequence number for the _State Files_ will increment everytime Windows Notepad is closed and is indicative of many cycles of opening and closing Windows Notepad while in the unsaved and flushed state. 
+
+While Windows Notepad is open the _File Tab_ and _No File Tab_ can have [Unsaved Buffer Chunks](#unsaved-buffer-chunk) of changes that haven't been flushed. The [Unsaved Buffer Chunks](#unsaved-buffer-chunk) can be used to playback the changes to the text similar to a keylogger. Once Windows Notepad is closed or the file is saved, the [Unsaved Buffer Chunks](#unsaved-buffer-chunk) are flushed into the content.
+
+Opening a Tab adds another Tab GUID Chunk to the collection of Chunks and updates the number of bytes to the CRC32 in the [Windowstate](#windowstate) file. Any existing slack space in the file will get overwritten up to the end of the new CRC32. 
+
+Closing a tab deletes the relevant Tab GUID Chunk from the collection of Chunks and updates the number of bytes to the CRC32. Slack space after the CRC32 may result from closing tabs. The files appear to never get smaller.
+
+The following actions will cause an update of the sequence number in the [Windowstate](#windowstate) files:
+- Resizing window
+- Moving window
+- Reordering/moving tabs
+- Closing tab(s)
+	- Closing multiple tabs at once results in one action
+- Opening tab(s)
+
+Creating a new Windows Notepad window by dragging a tab outside of the original window will spawn new [Windowstate](#windowstate) files. As you close each extra window, it will prompt you to save any files in that window and the corresponding [Windowstate](#windowstate) files will be deleted. When the last window of Windows Notepad is closed, the final [Windowstate](#windowstate) files will not be deleted. Only the [Windowstate](#windowstate) files for the last closed Windows Notepad is kept.
 
 ## Acknowledgements
 
