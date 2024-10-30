@@ -2,14 +2,9 @@
 
 Microsoft Windows 11's version of [Windows Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3) supports multiple tabs and many other features. This repository serves to record and document my research and efforts in reverse engineering the format of the tabstate and windowstate files and understand their behavior. The result of which is a C# library and toolset that provides the ability to parse and manipulate the tabstate, windowstate, and settings files. 
 
-The following are planned/completed:
-- [x] Tabstate Parser
-- [x] Windowstate Parser
-- [x] 010 Editor Binary Template File for Windowstate/Tabstate file
-- [x] ImHex Pattern File for Windowstate/Tabstate file 
+The following are planned:
 - [ ] Tabstate Manipulator
 - [ ] Windowstate Manipulator
-- [ ] Settings.dat / Application Registry
 - [ ] Ways to detect manipulation
 - [ ] POC Malware
 
