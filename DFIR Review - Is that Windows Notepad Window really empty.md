@@ -12,6 +12,7 @@ What evidence can be lost if you open Windows Notepad?
 - Microsoft Windows 11 23H2 Build 22635 (Original Tests)
 - Windows Notepad Version 11.2407.9.0
 - Windows Notepad Version 11.2408.12.0
+- Windows Notepad Version 11.2409.9.0
 
 ### Tools:
 - ImHex
