@@ -4,6 +4,9 @@ using System.Globalization;
 using CommandLine;
 using WindowsNotepadParser;
 using System.IO.Compression;
+using System.ComponentModel.DataAnnotations;
+using CsvHelper.Configuration;
+using System.Diagnostics;
 
 Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
@@ -11,6 +14,7 @@ Parser.Default.ParseArguments<Options>(args)
                 string tabStateLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\TabState");
                 string windowStateLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Packages\Microsoft.WindowsNotepad_8wekyb3d8bbwe\LocalState\WindowState");       
                 string outputLocation = Directory.GetCurrentDirectory();
+                bool generateGif = options.generateGif;
 
                 if (!string.IsNullOrWhiteSpace(options.tabStateLocation))
                 {
@@ -26,6 +30,14 @@ Parser.Default.ParseArguments<Options>(args)
                 }
 
                 Console.WriteLine("********** Starting **********");
+
+                //TODO: Detect version of Notepad
+
+                //string exeLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\WindowsApps\Microsoft.WindowsNotepad_8wekyb3d8bbwe\notepad.exe");
+                //FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exeLocation);
+                //string fileVersion = versionInfo.FileVersion;
+                //Console.WriteLine("Version: {0}", fileVersion);
+
                 Console.WriteLine("TabState Folder Location - {0}", tabStateLocation);
                 if (!Directory.Exists(tabStateLocation)) 
                 {
@@ -98,8 +110,14 @@ Parser.Default.ParseArguments<Options>(args)
                                     }
                                 }
 
-                                ContentToImage ci = new ContentToImage(np.Content, np.UnsavedBufferChunks,string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
+                                if (generateGif)
+                                {
+                                    Console.WriteLine("Generating Unsaved Buffer Chunks GIF for TabState - {0}", Path.GetFileName(path));
+                                    ContentToImage ci = new ContentToImage(np.Content, np.UnsavedBufferChunks, string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
+                                }
                             }
+                            
+                            Console.WriteLine("CRC32 Check Pass: {0}", np.CRC32Calculated.SequenceEqual(np.CRC32Stored));
                         }
                     }
                 }
@@ -153,6 +171,8 @@ Parser.Default.ParseArguments<Options>(args)
                             Console.WriteLine("Processing WindowState - {0}", Path.GetFileName(path));
                             NPWindowState np = new NPWindowState(data, Path.GetFileName(path));
                             windowStateTabs.Add(np);
+
+                            Console.WriteLine("CRC32 Check Pass: {0}", np.CRC32Calculated.SequenceEqual(np.CRC32Stored));
                         }
                     }
                 }
@@ -215,4 +235,7 @@ public class Options
 
     [Option('o', "outputlocation", Required = false, HelpText = "Output Folder Location for CSV files. Default location is same folder as program.")]
     public string outputLocation { get; set; }
+
+    [Option('g', "generategif" , Default = false, Required = false, HelpText = "Generate GIF images of Unsaved Buffer Chunks. Default is false.")]
+    public bool generateGif { get; set; }
 }
