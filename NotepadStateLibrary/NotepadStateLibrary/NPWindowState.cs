@@ -48,6 +48,22 @@ namespace NotepadStateLibrary
         /// </summary>
         public List<byte[]> Tabs { get; private set; }
         /// <summary>
+        /// 
+        /// </summary>
+        public string TabsList
+        {
+            get
+            {
+                List<string> gsList = new List<string>();
+                foreach (var t in Tabs)
+                {
+                    gsList.Add((new Guid(t)).ToString());
+
+                }
+                return String.Join(", ", gsList.ToArray());
+            }
+        }
+        /// <summary>
         /// Top left X/Y coordinates
         /// </summary>
         public WindowXY TopLeftCoords { get; private set; }
@@ -170,108 +186,27 @@ namespace NotepadStateLibrary
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="NewTabs"></param>
-        public void WriteTabList(List<byte[]> NewTabs)
+        /// <param name="newTabs"></param>
+        public void WriteTabList(List<byte[]> newTabs)
         {
-            using (MemoryStream stream = new MemoryStream(bytes))
-            {
-                using (MemoryStream outStream = new MemoryStream())
-                {
-                    using (BinaryReader reader = new BinaryReader(stream))
-                    {
-                        using (BinaryWriter writer = new BinaryWriter(outStream))
-                        {
-                            var hdr = reader.ReadBytes(2);
-                            writer.Write(hdr);
-                            string hdrType = Encoding.ASCII.GetString(hdr);
-                            if (hdrType == "NP")
-                            {
-                                CRC32Check c = new CRC32Check();
+            NumberTabs = (ulong)newTabs.Count;
+            Tabs = newTabs;
 
-                                reader.ReadLEB128Unsigned();
-                                writer.Write(SequenceNumber.WriteLEB128Unsigned());
-                                c.AddBytes(SequenceNumber);
-
-                                reader.ReadLEB128Unsigned();
-                                writer.Write(BytesToCRC);
-                                c.AddBytes(BytesToCRC);
-
-
-                                var delim = reader.ReadBytes(1);
-                                writer.Write(delim);
-                                c.AddBytes(delim);
-
-                                var OriginalNumberTabs = reader.ReadLEB128Unsigned();
-                                NumberTabs = (ulong)NewTabs.Count;
-
-                                writer.Write(NumberTabs.WriteLEB128Unsigned());
-                                c.AddBytes(NumberTabs);
-
-                                reader.ReadBytes((int)OriginalNumberTabs * 16);
-
-                                for (int x = 0; x < (int)NumberTabs; x++)
-                                {
-                                    writer.Write(Tabs[x]);
-                                    c.AddBytes(Tabs[x]);
-                                }
-
-                                reader.ReadLEB128Unsigned(); 
-                                writer.Write(ActiveTab.WriteLEB128Unsigned());
-                                c.AddBytes(ActiveTab);
-
-                                var tlc1 = reader.ReadUInt32();
-                                writer.Write(tlc1);
-                                c.AddBytes(tlc1);
-                                var tlc2 = reader.ReadUInt32();
-                                writer.Write(tlc2);
-                                c.AddBytes(tlc2);
-
-                                TopLeftCoords = new WindowXY((int)tlc1, (int)tlc2);
-
-
-                                var brc3 = reader.ReadUInt32();
-                                writer.Write(brc3);
-                                c.AddBytes(brc3);
-                                var brc4 = reader.ReadUInt32();
-                                writer.Write(brc4);
-                                c.AddBytes(brc4);
-
-                                BottomRightCoords = new WindowXY((int)brc3, (int)brc4);
-
-
-                                var wsc5 = reader.ReadUInt32();
-                                writer.Write(wsc5);
-                                c.AddBytes(wsc5);
-                                var wsc6 = reader.ReadUInt32();
-                                writer.Write(wsc6);
-                                c.AddBytes(wsc6);
-
-                                WindowSize = new WindowXY((int)wsc5, (int)wsc6);
-
-
-                                var delim2 = reader.ReadBytes(1);
-                                writer.Write(delim2);
-                                c.AddBytes(delim2);
-
-                                reader.ReadBytes(4);
-                                CRC32Stored = c.CRC32;
-                                writer.Write(CRC32Stored);
-                                CRC32Calculated = c.CRC32;
-                            }
-                        }
-                    }
-                }
-            }
+            Save();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TopLeft"></param>
-        /// <param name="BottomRight"></param>
-        public void Resize(WindowXY TopLeft, WindowXY BottomRight)
+        /// <param name="topLeft"></param>
+        /// <param name="bottomRight"></param>
+        public void Resize(WindowXY topLeft, WindowXY bottomRight)
         {
             //This should be the main one
+            TopLeftCoords = topLeft;
+            BottomRightCoords = bottomRight;
+
+            Save();
         }
 
         /// <summary>
@@ -363,6 +298,64 @@ namespace NotepadStateLibrary
                     }
                 }
             }
-        }          
+        }
+
+        private void Save()
+        {
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(outStream))
+                {
+                    writer.Write([0x4E, 0x50]);
+
+                    CRC32Check c = new CRC32Check();
+                    writer.Write(SequenceNumber.WriteLEB128Unsigned());
+                    c.AddBytes(SequenceNumber);
+
+                    writer.Write(BytesToCRC.WriteLEB128Unsigned());
+                    c.AddBytes(BytesToCRC);
+
+                    writer.Write([0x00]);
+                    c.AddBytes([0x00]);
+
+                    writer.Write(NumberTabs.WriteLEB128Unsigned());
+                    c.AddBytes(NumberTabs);
+
+                    foreach(var t in Tabs)
+                    {
+                        writer.Write(t);
+                        c.AddBytes(t);
+                    }
+
+                    writer.Write(ActiveTab.WriteLEB128Unsigned());
+                    c.AddBytes(ActiveTab);
+
+                    writer.Write(TopLeftCoords.X);
+                    c.AddBytes((uint)TopLeftCoords.X);
+                    
+                    writer.Write(TopLeftCoords.Y);
+                    c.AddBytes((uint)TopLeftCoords.Y);
+
+                    writer.Write(BottomRightCoords.X);
+                    c.AddBytes((uint)BottomRightCoords.X);
+
+                    writer.Write(BottomRightCoords.Y);
+                    c.AddBytes((uint)BottomRightCoords.Y);
+
+                    writer.Write(WindowSize.X);
+                    c.AddBytes((uint)WindowSize.X);
+
+                    writer.Write(WindowSize.Y);
+                    c.AddBytes((uint)WindowSize.Y);
+
+                    writer.Write([0x00]);
+                    c.AddBytes([0x00]);
+
+                    writer.Write(c.CRC32);
+
+                    bytes = outStream.ToArray();
+                }
+            }
+        }
     }
 }
