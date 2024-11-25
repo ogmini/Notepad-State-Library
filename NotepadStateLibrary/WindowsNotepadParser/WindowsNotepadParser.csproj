@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>ogmini</Authors>
     <PackageProjectUrl>https://github.com/ogmini/Notepad-State-Library</PackageProjectUrl>
   </PropertyGroup>

@@ -272,6 +272,16 @@ namespace NotepadStateLibrary
             return bytes;
         }
 
+        public byte[] WriteUnsavedBufferChunk()
+        {
+            UnsavedBufferChunk chk = new UnsavedBufferChunk(FileName, 0, 0, 1, new byte[] { 0x54, 0x00 }, new byte[] { 0x19, 0x37, 0x05, 0x7A }, new byte[] { 0x19, 0x37, 0x05, 0x7A });
+            UnsavedBufferChunks.Add(chk);
+
+            Save();
+
+            return bytes;
+        }
+
         private void ParseBytes()
         {
             using (MemoryStream stream = new MemoryStream(bytes))
@@ -567,7 +577,7 @@ namespace NotepadStateLibrary
                                 writer.Write(ShowUnicode);
                                 c.AddBytes(ShowUnicode);
 
-                                writer.Write(OptionCount);
+                                writer.Write(OptionCount.WriteLEB128Unsigned());
                                 c.AddBytes(OptionCount);
 
                                 //Write Extra Options

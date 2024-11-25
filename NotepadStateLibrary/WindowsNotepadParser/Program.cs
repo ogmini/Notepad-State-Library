@@ -33,10 +33,7 @@ Parser.Default.ParseArguments<Options>(args)
 
                 //TODO: Detect version of Notepad
 
-                //string exeLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\WindowsApps\Microsoft.WindowsNotepad_8wekyb3d8bbwe\notepad.exe");
-                //FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exeLocation);
-                //string fileVersion = versionInfo.FileVersion;
-                //Console.WriteLine("Version: {0}", fileVersion);
+                //Powershell? Get-AppxPackage *notepad* | Select Name, Version
 
                 Console.WriteLine("TabState Folder Location - {0}", tabStateLocation);
                 if (!Directory.Exists(tabStateLocation)) 
