@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsNotepadParser", "WindowsNotepadParser\WindowsNotepadParser.csproj", "{D1DC00E6-9FB4-40C3-91DD-F7B5FEC49EFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POCMalware", "POCMalware\POCMalware.csproj", "{F8E93D84-FDD9-4BDB-AC77-2A0239AB03BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POCMalware", "POCMalware\POCMalware.csproj", "{F8E93D84-FDD9-4BDB-AC77-2A0239AB03BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsNotepadParser-Minimal", "WindowsNotepadParser-Minimal\WindowsNotepadParser-Minimal.csproj", "{36605D94-34FE-43DA-9FEF-B29DEF79644B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{F8E93D84-FDD9-4BDB-AC77-2A0239AB03BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8E93D84-FDD9-4BDB-AC77-2A0239AB03BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8E93D84-FDD9-4BDB-AC77-2A0239AB03BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36605D94-34FE-43DA-9FEF-B29DEF79644B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36605D94-34FE-43DA-9FEF-B29DEF79644B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36605D94-34FE-43DA-9FEF-B29DEF79644B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36605D94-34FE-43DA-9FEF-B29DEF79644B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
