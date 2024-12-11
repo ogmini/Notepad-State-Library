@@ -101,7 +101,7 @@ namespace NotepadStateLibrary
         /// <summary>
         /// Modified Time of Saved File
         /// </summary>
-        public DateTime Timestamp { get; private set; }
+        public DateTime? Timestamp { get; private set; }
         /// <summary>
         /// <para>0 = Unsaved Tab</para>
         /// <para>1 = Saved Tab</para>
@@ -554,8 +554,10 @@ namespace NotepadStateLibrary
                                 writer.Write(CarriageReturnType);
                                 c.AddBytes(CarriageReturnType);
 
-                                writer.Write(((ulong)Timestamp.ToFileTime()).WriteLEB128Unsigned());
-                                c.AddBytes((ulong)Timestamp.ToFileTime());
+                                DateTime dt = (DateTime)Timestamp;
+
+                                writer.Write(((ulong)dt.ToFileTime()).WriteLEB128Unsigned());
+                                c.AddBytes((ulong)dt.ToFileTime());
 
                                 writer.Write(FileHashStored);
                                 c.AddBytes(FileHashStored);
