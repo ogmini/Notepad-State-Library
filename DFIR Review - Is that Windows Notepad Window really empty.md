@@ -1,6 +1,6 @@
 # Is that Windows Notepad window really empty?
 
-## Synposis
+## Synopsis
 
 ### Forensics Question:  
 What artifacts can be recovered from Windows Notepad now that it supports multiple tabs, saving session state, and multi-level undo?   
