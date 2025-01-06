@@ -1,12 +1,11 @@
 ﻿using NotepadStateLibrary;
 using CsvHelper;
+using CsvHelper.Configuration;
 using System.Globalization;
 using CommandLine;
 using WindowsNotepadParser;
 using System.IO.Compression;
-using System.ComponentModel.DataAnnotations;
-using CsvHelper.Configuration;
-using System.Diagnostics;
+
 
 Parser.Default.ParseArguments<Options>(args)
             .WithParsed(options =>
@@ -63,6 +62,11 @@ Parser.Default.ParseArguments<Options>(args)
                 List<NPWindowState> windowStateTabs = new List<NPWindowState>();
                 List<UnsavedBufferChunk> unsavedChunks = new List<UnsavedBufferChunk>();
 
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = true
+                };
+
                 //Tabstate
                 Console.WriteLine("Copying TabState Folder - {0}", tabStateLocation);
                 CreateZipFromDirectory(tabStateLocation, Path.Combine(outputLocation, "TabStateFolder.zip"));
@@ -98,7 +102,7 @@ Parser.Default.ParseArguments<Options>(args)
 
                                 using (var writer = new StreamWriter(Path.Combine(outputLocation,string.Format("{0}-UnsavedBufferChunks.csv", Path.GetFileNameWithoutExtension(path)))))
                                 {
-                                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                                    using (var csv = new CsvWriter(writer, config))
                                     {
 
                                         csv.WriteHeader<UnsavedBufferChunk>();
@@ -120,35 +124,44 @@ Parser.Default.ParseArguments<Options>(args)
                 }
 
                 //Writing File Tabs
-                using (var writer = new StreamWriter(Path.Combine(outputLocation, "FileTabs.csv")))
+                if (fileTabs.Count > 0)
                 {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    using (var writer = new StreamWriter(Path.Combine(outputLocation, "FileTabs.csv")))
                     {
-                        csv.WriteHeader<NPTabState>();
-                        csv.NextRecord();
-                        csv.WriteRecords(fileTabs);
+                        using (var csv = new CsvWriter(writer, config))
+                        {
+                            csv.WriteHeader<NPTabState>();
+                            csv.NextRecord();
+                            csv.WriteRecords(fileTabs);
+                        }
                     }
                 }
 
                 //Writing No File Tabs
-                using (var writer = new StreamWriter(Path.Combine(outputLocation, "NoFileTabs.csv")))
+                if (noFileTabs.Count > 0)
                 {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    using (var writer = new StreamWriter(Path.Combine(outputLocation, "NoFileTabs.csv")))
                     {
-                        csv.WriteHeader<NPTabState>();
-                        csv.NextRecord();
-                        csv.WriteRecords(noFileTabs);
+                        using (var csv = new CsvWriter(writer, config))
+                        {
+                            csv.WriteHeader<NPTabState>();
+                            csv.NextRecord();
+                            csv.WriteRecords(noFileTabs);
+                        }
                     }
                 }
 
                 //Writing State Tabs
-                using (var writer = new StreamWriter(Path.Combine(outputLocation, "StateTabs.csv")))
+                if (stateTabs.Count > 0)
                 {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    using (var writer = new StreamWriter(Path.Combine(outputLocation, "StateTabs.csv")))
                     {
-                        csv.WriteHeader<NPTabState>();
-                        csv.NextRecord();
-                        csv.WriteRecords(stateTabs);
+                        using (var csv = new CsvWriter(writer, config))
+                        {
+                            csv.WriteHeader<NPTabState>();
+                            csv.NextRecord();
+                            csv.WriteRecords(stateTabs);
+                        }
                     }
                 }
 
@@ -175,13 +188,16 @@ Parser.Default.ParseArguments<Options>(args)
                 }
 
                 //Writing Window States
-                using (var writer = new StreamWriter(Path.Combine(outputLocation, "WindowStateTabs.csv")))
+                if (windowStateTabs.Count > 0)
                 {
-                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    using (var writer = new StreamWriter(Path.Combine(outputLocation, "WindowStateTabs.csv")))
                     {
-                        csv.WriteHeader<NPWindowState>();
-                        csv.NextRecord();
-                        csv.WriteRecords(windowStateTabs);
+                        using (var csv = new CsvWriter(writer, config))
+                        {
+                            csv.WriteHeader<NPWindowState>();
+                            csv.NextRecord();
+                            csv.WriteRecords(windowStateTabs);
+                        }
                     }
                 }
 
