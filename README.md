@@ -6,7 +6,7 @@ The following are planned:
 - [ ] Tabstate Manipulator
 - [ ] Windowstate Manipulator
 - [ ] Ways to detect manipulation
-- [ ] POC Malware
+- [X] POC Malware - [https://github.com/ogmini/Notepad-State-Library/releases/tag/GaslitPad](https://github.com/ogmini/Notepad-State-Library/releases/tag/GaslitPad)
 
 This library and its tools could be useful in forensic investigations or even in the toolbox for a red/purple team.
 
