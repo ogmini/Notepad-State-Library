@@ -10,6 +10,12 @@ The following are planned:
 
 This library and its tools could be useful in forensic investigations or even in the toolbox for a red/purple team.
 
+> [!NOTE]
+> This repository grew out of two previous repositories of research and code that have been kept for posterity. 
+>  
+> [https://github.com/ogmini/Notepad-Tabstate-Buffer](https://github.com/ogmini/Notepad-Tabstate-Buffer)  
+> [https://github.com/ogmini/Notepad-Windowstate-Buffer](https://github.com/ogmini/Notepad-Windowstate-Buffer)
+
 ## Usage
 > [!WARNING]
 > Prior to using the library or any of the tools, you should have an understanding of the tabstate, windowstate, and settings files. 
