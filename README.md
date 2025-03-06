@@ -253,6 +253,8 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |LocalizedFontFamily|0x5f5e10c| String
 |LocalizedFontStyle|0x5f5e10c| String
 |OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
+|RewriteEnabled|0x5f5e10b| 0 = Off / 1 = On
+|RewriteTeachingtip|0x5f5e10b| 0 = Off / 1 = On
 |SpellCheckState|0x5f5e10c| JSON: `{"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}`
 |StatusBarShown|0x5f5e10b| 0 = Off / 1  = On
 |TeachingTipCheckCount|0x5f5e105| Unknown
