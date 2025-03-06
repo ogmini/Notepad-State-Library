@@ -108,7 +108,7 @@ namespace WindowsNotepadParser_Minimal
 
     public sealed class WindowMap : ClassMap<NPWindowState>
     {
-        public WindowMap() 
+        public WindowMap()
         {
             AutoMap(System.Globalization.CultureInfo.InvariantCulture);
             Map(m => m.FileName).Index(0);
@@ -117,12 +117,15 @@ namespace WindowsNotepadParser_Minimal
             Map(m => m.NumberTabs).Index(3);
             Map(m => m.TabsList).Index(4);
             Map(m => m.ActiveTab).Index(5);
-            Map(m => m.TopLeftCoords).Index(6);
-            Map(m => m.BottomRightCoords).Index(7);
-            Map(m => m.WindowSize).Index(8);
-            Map(m => m.CRC32Stored).Index(9);
-            Map(m => m.CRC32Calculated).Index(10);
-            Map(m => m.bytes).Index(11);
+            Map(m => m.TopLeftCoords.X).Name("TopLeftCoords-X").Index(6);
+            Map(m => m.TopLeftCoords.Y).Name("TopLeftCoords-Y").Index(7);
+            Map(m => m.BottomRightCoords.X).Name("BottomRightCoords-X").Index(8);
+            Map(m => m.BottomRightCoords.Y).Name("BottomRightCoords-Y").Index(9);
+            Map(m => m.WindowSize.X).Name("WindowSize-X").Index(10);
+            Map(m => m.WindowSize.Y).Name("WindowSize-Y").Index(11);
+            Map(m => m.CRC32Stored).Index(12);
+            Map(m => m.CRC32Calculated).Index(13);
+            Map(m => m.bytes).Index(14);
         }
     }
 }
