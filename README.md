@@ -261,6 +261,7 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |TeachingTipExplicitClose|0x5f5e10b| Unknown
 |TeachingTipVersion|0x5f5e105| Unknown
 |Theme|0x5f5e104| 0 = System / 1 = Light / 2 = Dark
+|WebAccountId|0x5f5e10c| Unknown
 |WindowPositionBottom|0x5f5e104|
 |WindowPositionHeight|0x5f5e104|
 |WindowPositionLeft|0x5f5e104|
