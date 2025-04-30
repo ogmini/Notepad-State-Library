@@ -48,8 +48,9 @@ Parser.Default.ParseArguments<Options>(args)
                 Console.WriteLine("Output Folder Location - {0}", outputLocation);
                 if (!Directory.Exists(outputLocation))
                 {
-                    Console.WriteLine("!! ERROR: Invalid Output Folder Location !!");
-                    Environment.Exit(3);
+                    Directory.CreateDirectory(outputLocation);
+                    Console.WriteLine("!! WARNING: Creating Output Folder !!");
+                    //Environment.Exit(3);
                 }
 
                 Console.WriteLine();
