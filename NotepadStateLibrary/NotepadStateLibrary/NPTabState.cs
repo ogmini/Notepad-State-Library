@@ -364,7 +364,10 @@ namespace NotepadStateLibrary
 
                                     var timeStamp = reader.ReadLEB128Unsigned();
                                     c.AddBytes(timeStamp);
-                                    Timestamp = DateTime.FromFileTime((long)timeStamp);
+                                    if (timeStamp > 0)
+                                    {
+                                        Timestamp = DateTime.FromFileTime((long)timeStamp);
+                                    }
 
                                     FileHashStored = reader.ReadBytes(32);
                                     c.AddBytes(FileHashStored);
