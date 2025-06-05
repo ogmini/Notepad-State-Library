@@ -34,6 +34,26 @@ Running `WindowsNotepadParser.exe` will check the default locations for [Tabstat
 
 Running `WindowsNotepadParser.exe --help` will display flag options.
 
+```
+ -t, --tabstatelocation       Tab State Folder Location. Default value is the system location.
+
+ -w, --windowstatelocation    Window State Folder Location. Default value is the system location.
+
+ -o, --outputlocation         Output Folder Location for CSV files. Default location is same folder as program.
+
+ --help                       Display this help screen.
+
+ --version                    Display version information.
+ ```
+
+ Examples
+
+The following arguments would look at D:\tabstatefolder for tab state files and D:\windowstatefolder for window state fles. The csv files will be output to D:\results.   
+ `WindowsNotepadParser.exe -t D:\tabstatefolder -w D:\windowstatefolder -o D:\results`
+
+The following arguments will parse the default system location for the current user and output the csv files to D:\results.  
+ `WindowsNotepadParser.exe -o D:\results`
+
 ## Information
 
 The information below has been tested/validated on the following configurations:
