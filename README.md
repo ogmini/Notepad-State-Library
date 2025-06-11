@@ -267,6 +267,9 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 | KeyName | Type | Notes |
 |---|---|---|
 |AutoCorrect|0x5f5e10b| 0 = Off / 1 = On
+|FindMatchCase | 0x5f5e10b | 0 = Off / 1 = On. Default is 0. |
+|FindString | 0x5f5e10c | Stores the last string searched by find. |
+|FindWrapAround | 0x5f5e10b | 0 = Off / 1 = On. Default is 1. |
 |FontFamily|0x5f5e10c| String
 |FontStyle|0x5f5e10c| String
 |GhostFile|0x5f5e10b| 0 = Open in a new window / 1 = Open content from a previous session
@@ -275,6 +278,7 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
 |RecentFiles | 0x5f5e10c | CSV array. List is in descending order with the most recently closed file at the top. |
 |RecentFilesFirstLoad | 0x5f5e10b | 0 = Off / 1 = On |
+|ReplaceString | 0x5f5e10c | Stores the last string that was the replacement. |
 |RewriteEnabled|0x5f5e10b| 0 = Off / 1 = On
 |RewriteTeachingtip|0x5f5e10b| 0 = Off / 1 = On
 |SpellCheckState|0x5f5e10c| JSON: `{"Enabled":false,"FileExtensionsOverrides":[[".md",true],[".ass",true],[".lic",true],[".srt",true],[".lrc",true],[".txt",true]]}`
@@ -290,7 +294,7 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |WindowPositionRight|0x5f5e104|
 |WindowPositionTop|0x5f5e104|
 |WindowPositionWidth|0x5f5e104|
-|WordWrap|0x5f5e10b| 0 = Off / 1 = On
+|WordWrap|0x5f5e10b| 0 = Off / 1 = On|
 
 ### Behavior
 
