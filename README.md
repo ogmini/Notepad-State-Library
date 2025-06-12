@@ -277,6 +277,7 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |LocalizedFontStyle|0x5f5e10c| String
 |OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
 |RecentFiles | 0x5f5e10c | CSV array. List is in descending order with the most recently closed file at the top. |
+|RecentFilesEnabled | 0x5f5e10b | 0 = Off / 1 = On |
 |RecentFilesFirstLoad | 0x5f5e10b | 0 = Off / 1 = On |
 |ReplaceString | 0x5f5e10c | Stores the last string that was the replacement. |
 |RewriteEnabled|0x5f5e10b| 0 = Off / 1 = On
