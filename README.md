@@ -270,12 +270,15 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |FindMatchCase | 0x5f5e10b | 0 = Off / 1 = On. Default is 0. |
 |FindString | 0x5f5e10c | Stores the last string searched by find. |
 |FindWrapAround | 0x5f5e10b | 0 = Off / 1 = On. Default is 1. |
+|FirstCowriterClick | 0x5f5e10b | |
+|FirstSignIn | 0x5f5e10b  |  |
 |FontFamily|0x5f5e10c| String
 |FontStyle|0x5f5e10c| String
 |GhostFile|0x5f5e10b| 0 = Open in a new window / 1 = Open content from a previous session
 |LocalizedFontFamily|0x5f5e10c| String
 |LocalizedFontStyle|0x5f5e10c| String
 |OpenFile|0x5f5e104| 0 = New Tab / 1 = New Window
+|PrivacyTeachingTip | 0x5f5e10b | |
 |RecentFiles | 0x5f5e10c | CSV array. List is in descending order with the most recently closed file at the top. |
 |RecentFilesEnabled | 0x5f5e10b | 0 = Off / 1 = On |
 |RecentFilesFirstLoad | 0x5f5e10b | 0 = Off / 1 = On |
@@ -289,6 +292,7 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |TeachingTipVersion|0x5f5e105| Unknown
 |Theme|0x5f5e104| 0 = System / 1 = Light / 2 = Dark
 |WebAccountId|0x5f5e10c| Unknown
+|WebAccountType | 0x5f5e104 |  |
 |WindowPositionBottom|0x5f5e104|
 |WindowPositionHeight|0x5f5e104|
 |WindowPositionLeft|0x5f5e104|
