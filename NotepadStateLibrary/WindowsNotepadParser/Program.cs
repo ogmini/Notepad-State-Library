@@ -115,7 +115,7 @@ Parser.Default.ParseArguments<Options>(args)
                                 if (generateGif)
                                 {
                                     Console.WriteLine("Generating Unsaved Buffer Chunks GIF for TabState - {0}", Path.GetFileName(path));
-                                    ContentToImage ci = new ContentToImage(np.Content, np.UnsavedBufferChunks, string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path)));
+                                    ContentToImage ci = new ContentToImage(np.Content, np.UnsavedBufferChunks, Path.Combine(outputLocation, string.Format("{0}.gif", Path.GetFileNameWithoutExtension(path))));
                                 }
                             }
                             
