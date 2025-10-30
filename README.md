@@ -314,7 +314,10 @@ Last 8 bytes of the value for each key is the 18-digit Win32 FILETIME Timestamp 
 |FirstCowriterClick | 0x5f5e10b | |
 |FirstSignIn | 0x5f5e10b  |  |
 |FontFamily|0x5f5e10c| String
+|FontSize|0x5f5e104|  
 |FontStyle|0x5f5e10c| String
+|FormattingEnabled| 0x5f5e10b | Markdown Enabled
+|FormattingFREFirstLoad| 0x5f5e10b | Unknown
 |GhostFile|0x5f5e10b| 0 = Open in a new window / 1 = Open content from a previous session
 |LocalizedFontFamily|0x5f5e10c| String
 |LocalizedFontStyle|0x5f5e10c| String
