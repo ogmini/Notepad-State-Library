@@ -82,6 +82,7 @@ The information below has been tested/validated on the following configurations:
 | Windows 11 23H2 OS Build 22631.4317 (Stable Release Branch) | 11.2408.12.0 |
 | Windows 11 23H2 OS Build 22631.4460 (Stable Release Branch) | 11.2409.9.0 |
 | Windows 11 24H2 OS Build 26100.4652 (Stable Release Branch) | 11.2504.62.0 |
+| Windows 11 25H2 OS Build 26200.6899 (Stable Release Branch) | 11.2507.26.0 |
 
 ### Tabstate
 
