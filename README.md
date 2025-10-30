@@ -188,7 +188,7 @@ I've created a [Notepad-Tabstate.bt](https://www.sweetscape.com/010editor/reposi
 |---|---|---|
 |:question:Unknown| 1 byte|Spellcheck/Autocorrect? Do not seem to be flags. These were added to the file format when Spellcheck/Autocorrect feature was added|
 |:question:Unknown| 1 byte|Spellcheck/Autocorrect? Do not seem to be flags. These were added to the file format when Spellcheck/Autocorrect feature was added|
-|Formatting| 1 byte| 1 = Unformatted / 2 = Markdown Formatted|
+|Formatting| 1 byte| 1 = Unformatted / 2 = Markdown Formatted / 3 = Markdown Syntax|
 
 ###### Unsaved Buffer Chunk
 
